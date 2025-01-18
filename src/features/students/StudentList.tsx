@@ -10,7 +10,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { useStudents } from '@/contexts/StudentsContext';
+import { useStudents } from '@/contexts/useStudents';
 
 export function StudentList() {
   const t = useTranslations('Students');

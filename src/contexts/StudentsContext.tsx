@@ -4,7 +4,6 @@ import {
   createContext,
   type PropsWithChildren,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -17,7 +16,7 @@ import { studentsApi } from '@/api/students';
 import type { StudentsContextType, StudentsState } from './students-context-types';
 import { defaultPagination, defaultSort } from './students-context-types';
 
-const StudentsContext = createContext<StudentsContextType | null>(null);
+export const StudentsContext = createContext<StudentsContextType | null>(null);
 
 // Debug helper
 const debug = (area: string, message: string, data?: unknown) => {
@@ -232,12 +231,4 @@ export function StudentsProvider({ children }: PropsWithChildren) {
       {children}
     </StudentsContext.Provider>
   );
-}
-
-export function useStudents() {
-  const context = useContext(StudentsContext);
-  if (!context) {
-    throw new Error('useStudents must be used within a StudentsProvider');
-  }
-  return context;
 }

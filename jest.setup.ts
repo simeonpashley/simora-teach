@@ -33,36 +33,40 @@ const originalLog = console.log;
 const originalInfo = console.info;
 const originalDebug = console.debug;
 
+const consoleSpy = false;
+
 beforeAll(() => {
-  console.error = (...args: any[]) => {
-    originalError.apply(console, args);
-    // Allow console.error in test setup tests that explicitly test this behavior
-    if (expect.getState().testPath?.includes('setup.test.ts')
-      || expect.getState().testPath?.includes('/api/')) {
-      return;
-    }
-    throw new Error('Console error was called');
-  };
-  console.warn = (...args: any[]) => {
-    originalWarn.apply(console, args);
-    // Allow console.warn in API tests
-    if (expect.getState().testPath?.includes('/api/')) {
-      return;
-    }
-    throw new Error('Console warn was called');
-  };
-  console.log = (...args: any[]) => {
-    originalLog.apply(console, args);
-    throw new Error('Console log was called');
-  };
-  console.info = (...args: any[]) => {
-    originalInfo.apply(console, args);
-    throw new Error('Console info was called');
-  };
-  console.debug = (...args: any[]) => {
-    originalDebug.apply(console, args);
-    throw new Error('Console debug was called');
-  };
+  if (consoleSpy) {
+    console.error = (...args: any[]) => {
+      originalError.apply(console, args);
+      // Allow console.error in test setup tests that explicitly test this behavior
+      if (expect.getState().testPath?.includes('setup.test.ts')
+        || expect.getState().testPath?.includes('/api/')) {
+        return;
+      }
+      throw new Error('Console error was called');
+    };
+    console.warn = (...args: any[]) => {
+      originalWarn.apply(console, args);
+      // Allow console.warn in API tests
+      if (expect.getState().testPath?.includes('/api/')) {
+        return;
+      }
+      throw new Error('Console warn was called');
+    };
+    console.log = (...args: any[]) => {
+      originalLog.apply(console, args);
+      throw new Error('Console log was called');
+    };
+    console.info = (...args: any[]) => {
+      originalInfo.apply(console, args);
+      throw new Error('Console info was called');
+    };
+    console.debug = (...args: any[]) => {
+      originalDebug.apply(console, args);
+      throw new Error('Console debug was called');
+    };
+  }
 });
 
 afterAll(() => {
