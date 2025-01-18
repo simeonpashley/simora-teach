@@ -107,6 +107,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-tailwindcss": "^3.17.5",
     "eslint-plugin-testing-library": "^6.3.0",
+    "framer-motion": "^11.18.1",
     "http-server": "^14.1.1",
     "husky": "^9.1.6",
     "identity-obj-proxy": "^3.0.0",
