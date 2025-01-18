@@ -36,9 +36,3 @@ export async function deleteStudents(studentIds: number[]) {
     throw error;
   }
 }
-
-// Client-side wrappers for server actions
-export const clientActions = {
-  getStudents,
-  deleteStudents,
-};

@@ -33,6 +33,7 @@ type DataTableProps<TData, TValue> = {
     sortOrder: 'asc' | 'desc';
     onSort: (field: string) => void;
   };
+  noResults?: string;
 };
 
 export function DataTable<TData, TValue>({
@@ -40,14 +41,17 @@ export function DataTable<TData, TValue>({
   columns,
   pagination,
   sorting,
+  noResults = 'No results found.',
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: pagination?.pageCount ?? -1,
   });
+
+  const rows = table.getRowModel().rows;
 
   return (
     <div className="space-y-4">
@@ -90,20 +94,33 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map(row => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {rows.length === 0
+              ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      {noResults}
+                    </TableCell>
+                  </TableRow>
+                )
+              : (
+                  rows.map(row => (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map(cell => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                )}
           </TableBody>
         </Table>
       </div>
 
-      {pagination && (
+      {pagination && rows.length > 0 && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Rows per page</span>

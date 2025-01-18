@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '@/api/base';
 import type {
@@ -6,8 +6,8 @@ import type {
   StudentFilters,
   StudentSortParams,
 } from '@/api/students';
+import { studentsApi } from '@/api/students';
 import type { PaginationParams, PaginationResponse } from '@/api/types';
-import { clientActions } from '@/app/[locale]/(auth)/dashboard/students/client-actions';
 
 type UseStudentsState = {
   students: Student[];
@@ -40,6 +40,11 @@ export function useStudents(initialStudents: Student[] = []) {
     sort: defaultSort,
   });
 
+  // Use a ref to track if this is the initial mount
+  const isInitialMount = useRef(true);
+  // Use a ref to track if a fetch is in progress
+  const isFetching = useRef(false);
+
   const handleApiError = useCallback((error: unknown) => {
     if (error instanceof ApiError) {
       // Auth errors are handled by the base client
@@ -61,32 +66,65 @@ export function useStudents(initialStudents: Student[] = []) {
   }, []);
 
   const fetchStudents = useCallback(async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    try {
-      const response = await clientActions.getStudents(
-        state.filters,
-        state.pagination,
-        state.sort,
-      );
-      setState(prev => ({
-        ...prev,
-        students: response.data,
-        pagination: {
-          ...prev.pagination,
-          totalPages: response.totalPages,
-          total: response.totalItems,
-        },
-        isLoading: false,
-      }));
-    } catch (error) {
-      handleApiError(error);
+    // Prevent concurrent fetches
+    if (isFetching.current) {
+      return;
     }
-  }, [state.filters, state.pagination, state.sort, handleApiError]);
+
+    setState((prev) => {
+      if (prev.isLoading) {
+        return prev;
+      }
+
+      // Start the fetch
+      isFetching.current = true;
+
+      // Use the current state values from the closure
+      const fetchData = async () => {
+        try {
+          const response = await studentsApi.list(
+            prev.filters,
+            prev.pagination,
+            prev.sort,
+          );
+          setState(p => ({
+            ...p,
+            students: response.data,
+            pagination: {
+              ...p.pagination,
+              ...response.pagination,
+            },
+            isLoading: false,
+          }));
+        } catch (error) {
+          handleApiError(error);
+        } finally {
+          isFetching.current = false;
+        }
+      };
+
+      // Start the async operation
+      fetchData();
+
+      // Return the loading state
+      return { ...prev, isLoading: true, error: null };
+    });
+  }, [handleApiError]); // Only depend on handleApiError
 
   // Fetch students when filters, pagination, or sort changes
   useEffect(() => {
-    fetchStudents();
-  }, [fetchStudents]);
+    // Skip the initial fetch since we already have initialStudents
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      fetchStudents();
+    }, 300); // Debounce API calls
+
+    return () => clearTimeout(timeoutId);
+  }, [state.filters, state.pagination, state.sort, fetchStudents]);
 
   const setFilters = useCallback((filters: StudentFilters) => {
     setState(prev => ({
@@ -127,21 +165,25 @@ export function useStudents(initialStudents: Student[] = []) {
   }, []);
 
   const handleDeleteSelected = useCallback(async () => {
-    if (state.selectedIds.length === 0) {
-      return;
-    }
+    setState((prev) => {
+      if (prev.selectedIds.length === 0 || prev.isLoading) {
+        return prev;
+      }
 
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    try {
-      await clientActions.deleteStudents(state.selectedIds);
-      // Refresh the list after deletion
-      await fetchStudents();
-      // Clear selection
-      setState(prev => ({ ...prev, selectedIds: [] }));
-    } catch (error) {
-      handleApiError(error);
-    }
-  }, [state.selectedIds, fetchStudents, handleApiError]);
+      const deleteData = async () => {
+        try {
+          await studentsApi.deleteMany(prev.selectedIds);
+          await fetchStudents();
+          setState(p => ({ ...p, selectedIds: [] }));
+        } catch (error) {
+          handleApiError(error);
+        }
+      };
+
+      deleteData();
+      return { ...prev, isLoading: true, error: null };
+    });
+  }, [fetchStudents, handleApiError]);
 
   return {
     ...state,

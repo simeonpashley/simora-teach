@@ -1,7 +1,7 @@
 import type { studentOverviewSchema } from '@/models/Schema';
 
 import { BaseApiClient } from './base';
-import type { PaginationParams } from './types';
+import type { ApiResponse, PaginationParams } from './types';
 
 export type Student = typeof studentOverviewSchema.$inferSelect;
 
@@ -20,13 +20,13 @@ export class StudentsApi extends BaseApiClient {
     super('/api/students');
   }
 
-  async getStudents(
+  async list(
     filters?: StudentFilters,
     pagination?: PaginationParams,
     sort?: StudentSortParams,
   ) {
     try {
-      return await this.request<Student[]>('', {
+      return await this.request<ApiResponse<Student[]>>('', {
         params: {
           ...filters,
           ...pagination,
@@ -44,7 +44,31 @@ export class StudentsApi extends BaseApiClient {
     }
   }
 
-  async deleteStudents(ids: number[]) {
+  async get(id: number) {
+    return await this.request<Student>(`/${id}`);
+  }
+
+  async create(student: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) {
+    return await this.request<Student>('', {
+      method: 'POST',
+      body: student,
+    });
+  }
+
+  async update(id: number, student: Partial<Omit<Student, 'id' | 'createdAt' | 'updatedAt'>>) {
+    return await this.request<Student>(`/${id}`, {
+      method: 'PATCH',
+      body: student,
+    });
+  }
+
+  async delete(id: number) {
+    await this.request(`/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async deleteMany(ids: number[]) {
     await this.request('', {
       method: 'DELETE',
       body: { ids },

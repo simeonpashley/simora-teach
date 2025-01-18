@@ -29,6 +29,12 @@
       }
     }
   },
+  "SignUp": {
+    "title": "Sign Up",
+    "description": "Create your account to get started",
+    "meta_title": "Sign Up - Rose by Simora",
+    "meta_description": "Create your Rose by Simora account"
+  },
   "Hero": {
     "follow_twitter": "Follow us on Twitter",
     "title": "The <important>Ultimate</important> Teacher Assistant",

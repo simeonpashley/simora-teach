@@ -10,13 +10,9 @@ import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { useStudents } from '@/hooks/useStudents';
+import { useStudents } from '@/contexts/StudentsContext';
 
-type StudentListProps = {
-  students: Student[];
-};
-
-export function StudentList({ students: initialStudents }: StudentListProps) {
+export function StudentList() {
   const t = useTranslations('Students');
   const {
     students,
@@ -32,7 +28,7 @@ export function StudentList({ students: initialStudents }: StudentListProps) {
     toggleSelection,
     toggleAllSelection,
     deleteSelected,
-  } = useStudents(initialStudents);
+  } = useStudents();
 
   const columns: ColumnDef<Student, unknown>[] = [
     {
@@ -40,7 +36,7 @@ export function StudentList({ students: initialStudents }: StudentListProps) {
       header: () => (
         <input
           type="checkbox"
-          checked={selectedIds.length === students.length}
+          checked={students?.length > 0 && selectedIds.length === students.length}
           onChange={toggleAllSelection}
         />
       ),
@@ -118,7 +114,7 @@ export function StudentList({ students: initialStudents }: StudentListProps) {
           )
         : (
             <DataTable<Student, unknown>
-              data={students}
+              data={students ?? []}
               columns={columns}
               pagination={{
                 pageIndex: pagination.page - 1,

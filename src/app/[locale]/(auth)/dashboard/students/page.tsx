@@ -1,15 +1,11 @@
 import { getTranslations } from 'next-intl/server';
 
+import { StudentsProvider } from '@/contexts/StudentsContext';
 import { TitleBar } from '@/features/dashboard/TitleBar';
 import { StudentList } from '@/features/students/StudentList';
 
-import { getStudents } from './actions';
-
-export async function generateMetadata(props: { params: { locale: string } }) {
-  const t = await getTranslations({
-    locale: props.params.locale,
-    namespace: 'Students',
-  });
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations({ locale, namespace: 'Students' });
 
   return {
     title: t('meta_title'),
@@ -19,18 +15,19 @@ export async function generateMetadata(props: { params: { locale: string } }) {
 
 export default async function StudentsPage() {
   const t = await getTranslations('Students');
-  const { data: students } = await getStudents();
 
   return (
-    <>
+    <div className="space-y-6">
       <TitleBar
         title={t('title')}
         description={t('description')}
       />
 
       <div className="rounded-md border bg-card p-6">
-        <StudentList students={students} />
+        <StudentsProvider>
+          <StudentList />
+        </StudentsProvider>
       </div>
-    </>
+    </div>
   );
 }
