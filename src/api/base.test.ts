@@ -75,6 +75,9 @@ describe('BaseApiClient', () => {
 
         return Promise.resolve({
           ok: true,
+          headers: {
+            get: () => 'application/json',
+          },
           json: () => Promise.resolve(mockResponse),
         });
       });
@@ -100,6 +103,9 @@ describe('BaseApiClient', () => {
 
         return Promise.resolve({
           ok: true,
+          headers: {
+            get: () => 'application/json',
+          },
           json: () => Promise.resolve(mockResponse),
         });
       });
@@ -126,6 +132,9 @@ describe('BaseApiClient', () => {
 
         return Promise.resolve({
           ok: true,
+          headers: {
+            get: () => 'application/json',
+          },
           json: () => Promise.resolve(mockResponse),
         });
       });
@@ -184,6 +193,9 @@ describe('BaseApiClient', () => {
 
         return Promise.resolve({
           ok: true,
+          headers: {
+            get: () => 'application/json',
+          },
           json: () => Promise.resolve(mockResponse),
         });
       });
@@ -208,6 +220,9 @@ describe('BaseApiClient', () => {
 
         return Promise.resolve({
           ok: true,
+          headers: {
+            get: () => 'application/json',
+          },
           json: () => Promise.resolve(mockResponse),
         });
       });

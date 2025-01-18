@@ -6,8 +6,8 @@ import type {
   StudentFilters,
   StudentSortParams,
 } from '@/api/students';
-import { studentsApi } from '@/api/students';
 import type { PaginationParams, PaginationResponse } from '@/api/types';
+import { clientActions } from '@/app/[locale]/(auth)/dashboard/students/client-actions';
 
 type UseStudentsState = {
   students: Student[];
@@ -63,14 +63,19 @@ export function useStudents(initialStudents: Student[] = []) {
   const fetchStudents = useCallback(async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const response = await studentsApi.getStudents(
+      const response = await clientActions.getStudents(
         state.filters,
         state.pagination,
         state.sort,
       );
       setState(prev => ({
         ...prev,
-        students: response,
+        students: response.data,
+        pagination: {
+          ...prev.pagination,
+          totalPages: response.totalPages,
+          total: response.totalItems,
+        },
         isLoading: false,
       }));
     } catch (error) {
@@ -121,14 +126,14 @@ export function useStudents(initialStudents: Student[] = []) {
     }));
   }, []);
 
-  const deleteSelected = useCallback(async () => {
+  const handleDeleteSelected = useCallback(async () => {
     if (state.selectedIds.length === 0) {
       return;
     }
 
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      await studentsApi.deleteStudents(state.selectedIds);
+      await clientActions.deleteStudents(state.selectedIds);
       // Refresh the list after deletion
       await fetchStudents();
       // Clear selection
@@ -145,7 +150,7 @@ export function useStudents(initialStudents: Student[] = []) {
     setSort,
     toggleSelection,
     toggleAllSelection,
-    deleteSelected,
+    deleteSelected: handleDeleteSelected,
     refresh: fetchStudents,
   };
 }

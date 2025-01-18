@@ -1,4 +1,4 @@
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 import { CTA } from '@/templates/CTA';
 import { DemoBanner } from '@/templates/DemoBanner';
@@ -21,19 +21,18 @@ export async function generateMetadata(props: { params: { locale: string } }) {
   };
 }
 
-const IndexPage = (props: { params: { locale: string } }) => {
-  unstable_setRequestLocale(props.params.locale);
-
+const IndexPage = () => {
   return (
     <>
-      <DemoBanner />
-      <Navbar />
-      <Hero />
-      <Features />
-      <Pricing />
-      <FAQ />
-      <CTA />
-      <Footer />
+      <h1>Hello</h1>
+      {false ? null : <DemoBanner />}
+      {false ? null : <Navbar />}
+      {false ? null : <Hero />}
+      {false ? null : <Features />}
+      {false ? null : <Pricing />}
+      {false ? null : <FAQ />}
+      {false ? null : <CTA />}
+      {false ? null : <Footer />}
     </>
   );
 };
