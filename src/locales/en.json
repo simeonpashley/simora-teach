@@ -1,0 +1,87 @@
+{
+  "Index": {
+    "meta_title": "Rose by Simora",
+    "meta_description": "Teacher assistant",
+    "title": "Teacher assistant",
+    "description": "Teacher assistant",
+    "get_started": "Get Started",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "dashboard": "Dashboard",
+    "features": {
+      "title": "Features",
+      "description": "Everything you need to build your SaaS application.",
+      "authentication": {
+        "title": "Authentication",
+        "description": "Built-in authentication with Clerk."
+      },
+      "database": {
+        "title": "Database",
+        "description": "PostgreSQL database with Drizzle ORM."
+      },
+      "ui": {
+        "title": "UI Components",
+        "description": "Beautiful and accessible components with Shadcn UI."
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Built-in internationalization with Next Intl."
+      }
+    }
+  },
+  "Footer": {
+    "copyright": "© Copyright {year} {name}. All rights reserved.",
+    "designed_by": "Designed by {author}"
+  },
+  "Dashboard": {
+    "meta_title": "Dashboard - Rose by Simora",
+    "meta_description": "Manage your students and track their progress",
+    "title": "Dashboard",
+    "description": "Welcome to your dashboard"
+  },
+  "DataTable": {
+    "no_results": "No results."
+  },
+  "Students": {
+    "meta_title": "My Students - Simora Teach",
+    "meta_description": "Manage and view your students",
+    "title": "My Students",
+    "description": "View and manage your student list",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "status": "Status",
+    "error_loading_students": "Error loading students",
+    "search_placeholder": "Search students...",
+    "all_statuses": "All Statuses",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "status_pending": "Pending",
+    "selected_count": "{count, plural, =1 {# student} other {# students}} selected",
+    "delete_selected": "Delete Selected"
+  },
+  "DashboardIndex": {
+    "meta_title": "Dashboard Rose by Simora",
+    "meta_description": "Dashboard of Rose by Simora",
+    "title_bar": "Welcome to your dashboard",
+    "title_bar_description": "Get started by exploring the features below.",
+    "message_state_title": "Rose",
+    "message_state_description": "This is a demo of Rose by Simora. You can find the source code on <code>GitHub</code>.",
+    "message_state_alternative": "Looking for a more advanced starter kit? Check out our <url>Pro SaaS Starter Kit</url>.",
+    "view_students": "View Students"
+  },
+  "DashboardLayout": {
+    "home": "Home",
+    "members": "Members",
+    "settings": "Settings"
+  },
+  "Error": {
+    "title": "Something went wrong!",
+    "description": "We've unfortunately encountered an error.",
+    "retry": "Try Again"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "We couldn't find the page you were looking for.",
+    "back_to_home": "Back to Home"
+  }
+}

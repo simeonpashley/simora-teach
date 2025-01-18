@@ -1,0 +1,89 @@
+{
+  "Index": {
+    "meta_title": "Simora Teach",
+    "meta_description": "Simora Teach ",
+    "title": "Simora Teach",
+    "description": "Simora Teach",
+    "get_started": "Commencer",
+    "sign_in": "Se connecter",
+    "sign_up": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "features": {
+      "title": "Fonctionnalités",
+      "description": "Tout ce dont vous avez besoin pour construire votre application SaaS.",
+      "authentication": {
+        "title": "Authentification",
+        "description": "Authentification intégrée avec Clerk."
+      },
+      "database": {
+        "title": "Base de données",
+        "description": "Base de données PostgreSQL avec Drizzle ORM."
+      },
+      "ui": {
+        "title": "Composants UI",
+        "description": "Composants beaux et accessibles avec Shadcn UI."
+      },
+      "i18n": {
+        "title": "Internationalisation",
+        "description": "Internationalisation intégrée avec Next Intl."
+      }
+    }
+  },
+  "Dashboard": {
+    "meta_title": "Tableau de bord - Simora Teach",
+    "meta_description": "Gérez vos étudiants et suivez leur progression",
+    "title": "Tableau de bord",
+    "description": "Bienvenue sur votre tableau de bord"
+  },
+  "DataTable": {
+    "no_results": "Aucun résultat."
+  },
+  "StudentList": {
+    "search_placeholder": "Rechercher des étudiants...",
+    "filter_status": "Filtrer par statut",
+    "status_all": "Tous",
+    "status_active": "Actif",
+    "status_inactive": "Inactif",
+    "status_pending": "En attente",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "no_results": "Aucun étudiant trouvé.",
+    "columns": {
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "date_of_birth": "Date de naissance",
+      "enrollment_date": "Date d'inscription",
+      "status": "Statut"
+    }
+  },
+  "DashboardIndex": {
+    "meta_title": "Tableau de bord - Simora Teach",
+    "meta_description": "Tableau de bord de Simora Teach",
+    "title_bar": "Bienvenue sur votre tableau de bord",
+    "title_bar_description": "Commencez en explorant les fonctionnalités ci-dessous.",
+    "message_state_title": "Simora Teach",
+    "message_state_description": "Ceci est une démo de Simora Teach. Vous pouvez trouver le code source sur <code>GitHub</code>.",
+    "message_state_alternative": "Vous cherchez un kit de démarrage plus avancé ? Découvrez notre <url>Kit de démarrage SaaS Pro</url>."
+  },
+  "DashboardLayout": {
+    "home": "Accueil",
+    "members": "Membres",
+    "settings": "Paramètres"
+  },
+  "Error": {
+    "title": "Une erreur est survenue !",
+    "description": "Nous avons malheureusement rencontré une erreur.",
+    "retry": "Réessayer"
+  },
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "Nous n'avons pas pu trouver la page que vous cherchiez.",
+    "back_to_home": "Retour à l'accueil"
+  },
+  "Students": {
+    "meta_title": "Mes Étudiants - Simora Teach",
+    "meta_description": "Gérer et voir vos étudiants",
+    "title": "Mes Étudiants",
+    "description": "Voir et gérer votre liste d'étudiants"
+  }
+}

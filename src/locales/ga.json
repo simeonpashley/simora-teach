@@ -1,0 +1,89 @@
+{
+  "Index": {
+    "meta_title": "Simora Teach",
+    "meta_description": "Cúntóir múinteora",
+    "title": "Cúntóir múinteora",
+    "description": "Cúntóir múinteora",
+    "get_started": "Tosaigh",
+    "sign_in": "Logáil Isteach",
+    "sign_up": "Cláraigh",
+    "dashboard": "Painéal",
+    "features": {
+      "title": "Gnéithe",
+      "description": "Gach rud atá ag teastáil uait chun d'fheidhmchlár SaaS a thógáil.",
+      "authentication": {
+        "title": "Fíordheimhniú",
+        "description": "Fíordheimhniú ionsuite le Clerk."
+      },
+      "database": {
+        "title": "Bunachar Sonraí",
+        "description": "Bunachar sonraí PostgreSQL le Drizzle ORM."
+      },
+      "ui": {
+        "title": "Comhpháirteanna UI",
+        "description": "Comhpháirteanna álainn agus inrochtana le Shadcn UI."
+      },
+      "i18n": {
+        "title": "Idirnáisiúnú",
+        "description": "Idirnáisiúnú ionsuite le Next Intl."
+      }
+    }
+  },
+  "Dashboard": {
+    "meta_title": "Painéal - Simora Teach",
+    "meta_description": "Bainistigh do dhaltaí agus lean a ndul chun cinn",
+    "title": "Painéal",
+    "description": "Fáilte go dtí do phainéal"
+  },
+  "DataTable": {
+    "no_results": "Gan torthaí."
+  },
+  "StudentList": {
+    "search_placeholder": "Cuardaigh daltaí...",
+    "filter_status": "Scag de réir stádais",
+    "status_all": "Gach ceann",
+    "status_active": "Gníomhach",
+    "status_inactive": "Neamhghníomhach",
+    "status_pending": "Ar feitheamh",
+    "previous": "Roimhe",
+    "next": "Ar aghaidh",
+    "no_results": "Níor aimsíodh aon daltaí.",
+    "columns": {
+      "first_name": "Céadainm",
+      "last_name": "Sloinne",
+      "date_of_birth": "Dáta breithe",
+      "enrollment_date": "Dáta cláraithe",
+      "status": "Stádas"
+    }
+  },
+  "DashboardIndex": {
+    "meta_title": "Painéal - Simora Teach",
+    "meta_description": "Painéal Simora Teach",
+    "title_bar": "Fáilte go dtí do phainéal",
+    "title_bar_description": "Tosaigh trí na gnéithe thíos a iniúchadh.",
+    "message_state_title": "Simora Teach",
+    "message_state_description": "Seo taispeántas de Simora Teach. Is féidir leat an cód foinse a fháil ar <code>GitHub</code>.",
+    "message_state_alternative": "Ag lorg tús-phacáiste níos forbartha? Féach ar ár <url>Tús-phacáiste Pro SaaS</url>."
+  },
+  "DashboardLayout": {
+    "home": "Baile",
+    "members": "Baill",
+    "settings": "Socruithe"
+  },
+  "Error": {
+    "title": "Tharla rud éigin mícheart!",
+    "description": "Ar an drochuair, tháinig muid ar earráid.",
+    "retry": "Bain triail eile as"
+  },
+  "NotFound": {
+    "title": "Leathanach gan aimsiú",
+    "description": "Níorbh fhéidir linn an leathanach a bhí á lorg agat a aimsiú.",
+    "back_to_home": "Ar ais go dtí an baile"
+  },
+  "Students": {
+    "meta_title": "Mo Dhaltaí - Simora Teach",
+    "meta_description": "Bainistigh agus féach ar do dhaltaí",
+    "title": "Mo Dhaltaí",
+    "description": "Féach agus bainistigh do liosta daltaí"
+  }
+}

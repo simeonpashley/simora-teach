@@ -1,0 +1,108 @@
+<general_guidelines>
+- **If you are unsure about anything, ask the user.**
+- Site must be easily maintained; use data-driven design for flexibility
+- use NextJS Link component for navigation where possible.
+- when making changes, the comments should be absolute not relative. BAD: "// fixed undefined" GOOD: "// set default value"
+- Reuse, extend or create reusable components where appropriate and use them in the project. UI: `src/components/ui`
+- "Simora" is the name of the company. "Simora Teach", "@simora/teach" is the internal & technical name of the project.
+- "Rose" or "Rose by Simora" is the public facing name of the product.
+</general_guidelines>
+
+<visual_design>
+- Fully responsive across devices, with a mobile-first approach.
+- Use CSS variables for colour themes
+  - Define variables in `src/styles/globals.css` under `:root`
+  - Define colour variables and then reference them ,e g., `---teach-blue: #0000FF` then use `bg-[var(--teach-blue)]` in the component
+  - Integrate CSS variables into `tailwind.config.ts` (`theme.extend.colors`)
+  - Use Tailwind classes based on CSS variables (e.g., `text-[var(--simora-text-color)]` or `bg-simoraBg`)
+  - Update the colours in :root to apply changes across the entire project.
+  - Use semantic class names (simoraText, simoraPrimary, etc.) to maintain a clear design system.
+</visual_design>
+
+<project_structure>
+- Each file should have only 1 component, components should be in their own files.
+
+Evaluate this file only and ensure it adheres to the following rules for maintainability and clarity:
+- Keep code files under 250 lines.
+- If a code file exceeds 250 lines, split it into smaller files following these rules:
+  - **DO NOT** change the function content - retain all behaviour, logic and comments verbatim **DO NOT** optimise or fix.
+  - Group code by cohesive functionality or responsibility (e.g., one class, module, or distinct feature per file).
+  - Maintain clear separation of concerns, ensuring related functions or logic remain together.
+  - Avoid introducing unnecessary dependencies between split files.
+  - Prioritise readability and natural logical boundaries over strictly adhering to the line limit.
+  - Preserve consistency with existing architectural patterns or module structures in the project.
+  - New files are named  to reference original file, e.g., `basket.ts` splits into `basketCore.ts` and `basketAdmin.ts`.
+</project_structure>
+
+<testing_guidelines>
+
+Testing uses JEST & REACT TESTING LIBRARY.
+
+Use `pnpm run test:before-all` to test files for type errors through compilation.
+
+1. Component Selection Strategy:
+   - Use `data-testid` for specific component targeting when multiple similar elements exist
+   - Use role-based queries for general accessibility testing
+   - Combine both approaches when dealing with complex interactive components
+
+2. Accessibility Testing:
+   - Test both ARIA labels and visual text
+   - Ensure unique identifiers for elements with same roles/labels
+   - Test focus management and keyboard navigation
+
+3. State Management Testing:
+   - Use jest.useFakeTimers() for time-dependent features
+   - Clear timers after each test
+   - Test all possible state transitions
+
+4. When fixing tests:
+   - First attempt to understand the root cause
+   - Make minimal changes to fix the issue
+   - Document any patterns that emerge
+   - Update relevant guidelines if the issue reveals a gap
+   - Consider creating new tools or updating existing ones if needed
+   <animation_testing>
+   1. "Framer Motion" Setup:
+      - Always mock "Framer Motion" components in tests
+      - Use standard mock template:
+        ```tsx
+        jest.mock("framer-motion", () => ({
+          motion: {
+            button: ({ children, onClick, className, "aria-label": ariaLabel }) => (
+              <button onClick={onClick} className={className} aria-label={ariaLabel}>
+                {children}
+              </button>
+            ),
+            div: ({ children, className }) => (
+              <div className={className}>{children}</div>
+            ),
+          },
+          AnimatePresence: ({ children }) => <>{children}</>,
+        }));
+        ```
+      - Avoid testing animation properties directly
+      - Test final rendered state instead of transition states
+   2. Width/Layout Testing:
+      - Don't test exact pixel values when "Framer Motion" is involved
+      - Test for presence of correct className combinations
+      - Verify container structure and hierarchy instead of exact dimensions
+   </animation_testing>
+</testing_guidelines>
+
+<component_development>
+1. Unique Identifiers:
+   - Always add `data-testid` to interactive elements
+   - Ensure unique ARIA labels when multiple similar elements exist
+   - Use consistent naming patterns across components: `{component-name}-{element-type}-{purpose}`. E.g., `chat-header-close-button`, `chat-toggle-button`
+
+2. State Management:
+   - Document all possible states
+   - Ensure state transitions are testable
+   - Handle edge cases (e.g., rapid state changes)
+
+3. Animation Components:
+   - Ensure test IDs pass through animation wrappers (e.g., Framer Motion)
+   - Document any special testing considerations for animated components
+   - Provide fallbacks for testing environments
+</component_development>
+
