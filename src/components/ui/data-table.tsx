@@ -44,6 +44,25 @@ type DataTableProps<TData, TValue> = {
   noResults?: string;
 };
 
+const PaginationButton = ({
+  onClick,
+  disabled,
+  testId,
+  children,
+}: { onClick: () => void; disabled: boolean; testId: string; children: React.ReactNode }) => {
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={onClick}
+      disabled={disabled}
+      data-testid={testId}
+    >
+      {children}
+    </Button>
+  );
+};
+
 export function DataTable<TData, TValue>({
   data,
   columns,
@@ -59,22 +78,18 @@ export function DataTable<TData, TValue>({
     pageCount: pagination?.pageCount ?? -1,
   });
 
+  const index = pagination?.pageIndex ?? 0;
+  const pageSize = pagination?.pageSize ?? 10;
+  const totalRows = pagination?.totalRows ?? 1;
   const rows = table.getRowModel().rows;
+  const from = index * pageSize + 1;
+  const to = Math.min(index * pageSize + pageSize, totalRows);
 
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
         <h3>
-          Found
-          {pagination?.totalRows}
-          {' '}
-          students
-        </h3>
-        <h3>
-          Found
-          {pagination?.pageCount}
-          {' '}
-          pages
+          {`Showing ${from} - ${to} of ${totalRows} students`}
         </h3>
         <Table>
           <TableHeader>
@@ -161,49 +176,44 @@ export function DataTable<TData, TValue>({
             </Select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+          <div data-testid="pagination-buttons" className="flex items-center gap-2">
+            <PaginationButton
               onClick={() => pagination.onPageSet(0)}
               disabled={pagination.pageIndex === 0}
+              testId="first-page"
             >
               {'<<'}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
+            </PaginationButton>
+            <PaginationButton
               onClick={() => pagination.onPageSet(pagination.pageIndex - 1)}
               disabled={pagination.pageIndex === 0}
+              testId="previous-page"
             >
               {'<'}
-            </Button>
+            </PaginationButton>
             <span className="text-sm">
               Page
               {' '}
-              {pagination.pageIndex + 1}
+              {pagination.pageIndex}
               {' '}
               of
               {' '}
               {pagination.pageCount}
-
             </span>
-            <Button
-              variant="outline"
-              size="sm"
+            <PaginationButton
               onClick={() => pagination.onPageSet(pagination.pageIndex + 1)}
-              disabled={pagination.pageIndex === pagination.pageCount - 1}
+              disabled={pagination.pageIndex === pagination.pageCount}
+              testId="next-page"
             >
               {'>'}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => pagination.onPageSet(pagination.pageCount - 1)}
-              disabled={pagination.pageIndex === pagination.pageCount - 1}
+            </PaginationButton>
+            <PaginationButton
+              onClick={() => pagination.onPageSet(pagination.pageCount)}
+              disabled={pagination.pageIndex === pagination.pageCount}
+              testId="last-page"
             >
               {'>>'}
-            </Button>
+            </PaginationButton>
           </div>
         </div>
       )}

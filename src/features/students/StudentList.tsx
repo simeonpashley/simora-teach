@@ -168,7 +168,9 @@ export function StudentList() {
             <DataTable<Student, unknown>
               data={students}
               columns={columns}
-              pagination={{ totalRows: total, pageIndex: page - 1, pageSize, pageCount: totalPages, onPageSet: index => setPage(index), onPageSizeChange: (size) => {
+              pagination={{ totalRows: total, pageIndex: page, pageSize, pageCount: totalPages, onPageSet: (index) => {
+                setPage(index);
+              }, onPageSizeChange: (size) => {
                 setPageSize(size);
                 setPage(1);
               } }}
