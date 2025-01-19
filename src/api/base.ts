@@ -28,7 +28,7 @@ export abstract class BaseApiClient {
   protected async request<T>(
     endpoint: string,
     options: RequestOptions = {},
-  ): Promise<T> {
+  ): Promise<ApiResponse<T>> {
     const {
       method = 'GET',
       headers = {},
@@ -97,7 +97,7 @@ export abstract class BaseApiClient {
         throw error;
       }
 
-      return (data as ApiResponse<T>).data;
+      return (data as ApiResponse<T>);
     } catch (error) {
       console.warn(`url:${url} requestOptions:`, requestOptions);
       console.error('error', error);

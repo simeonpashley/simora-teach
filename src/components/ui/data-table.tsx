@@ -28,10 +28,12 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   pagination?: {
+    totalRows: number;
     pageIndex: number;
     pageSize: number;
     pageCount: number;
-    onPageChange: (pageIndex: number) => void;
+    totalItems?: number;
+    onPageSet: (pageIndex: number) => void;
     onPageSizeChange: (pageSize: number) => void;
   };
   sorting?: {
@@ -62,6 +64,18 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
+        <h3>
+          Found
+          {pagination?.totalRows}
+          {' '}
+          students
+        </h3>
+        <h3>
+          Found
+          {pagination?.pageCount}
+          {' '}
+          pages
+        </h3>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
@@ -151,7 +165,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => pagination.onPageChange(0)}
+              onClick={() => pagination.onPageSet(0)}
               disabled={pagination.pageIndex === 0}
             >
               {'<<'}
@@ -159,7 +173,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => pagination.onPageChange(pagination.pageIndex - 1)}
+              onClick={() => pagination.onPageSet(pagination.pageIndex - 1)}
               disabled={pagination.pageIndex === 0}
             >
               {'<'}
@@ -172,11 +186,12 @@ export function DataTable<TData, TValue>({
               of
               {' '}
               {pagination.pageCount}
+
             </span>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => pagination.onPageChange(pagination.pageIndex + 1)}
+              onClick={() => pagination.onPageSet(pagination.pageIndex + 1)}
               disabled={pagination.pageIndex === pagination.pageCount - 1}
             >
               {'>'}
@@ -184,7 +199,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => pagination.onPageChange(pagination.pageCount - 1)}
+              onClick={() => pagination.onPageSet(pagination.pageCount - 1)}
               disabled={pagination.pageIndex === pagination.pageCount - 1}
             >
               {'>>'}

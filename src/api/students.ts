@@ -2,7 +2,7 @@ import type { StudentFilters } from '@/dao/StudentDAO';
 import type { studentOverviewSchema } from '@/models/Schema';
 
 import { BaseApiClient } from './base';
-import type { ApiResponse, PaginationParams } from './types';
+import type { PaginationParams } from './types';
 
 export type Student = typeof studentOverviewSchema.$inferSelect;
 
@@ -22,7 +22,7 @@ export class StudentsApi extends BaseApiClient {
     sort?: StudentSortParams,
   ) {
     try {
-      return await this.request<ApiResponse<Student[]>>('', {
+      return await this.request<Student[]>('', {
         params: {
           ...filters,
           ...pagination,

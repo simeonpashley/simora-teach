@@ -30,6 +30,7 @@ export function StudentList() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(1);
   const [sortBy, setSortBy] = useState<keyof Student>('lastName');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
@@ -45,14 +46,10 @@ export function StudentList() {
         { sortBy, sortOrder },
       );
 
-      if (Array.isArray(response)) {
-        setStudents(response);
-        setTotalPages(Math.ceil(response.length / pageSize));
-      } else if (response && typeof response === 'object') {
-        setStudents(response.data);
-        if (response.pagination) {
-          setTotalPages(response.pagination.totalPages);
-        }
+      setStudents(response.data);
+      if (response.pagination) {
+        setTotal(response.pagination.total);
+        setTotalPages(response.pagination.totalPages);
       }
     } catch (error) {
       setError(error instanceof Error ? error : new Error('Failed to load students'));
@@ -171,16 +168,10 @@ export function StudentList() {
             <DataTable<Student, unknown>
               data={students}
               columns={columns}
-              pagination={{
-                pageIndex: page - 1,
-                pageSize,
-                pageCount: totalPages,
-                onPageChange: index => setPage(index),
-                onPageSizeChange: (size) => {
-                  setPageSize(size);
-                  setPage(1);
-                },
-              }}
+              pagination={{ totalRows: total, pageIndex: page - 1, pageSize, pageCount: totalPages, onPageSet: index => setPage(index), onPageSizeChange: (size) => {
+                setPageSize(size);
+                setPage(1);
+              } }}
               sorting={{
                 sortBy,
                 sortOrder,

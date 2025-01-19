@@ -90,7 +90,7 @@ describe('BaseApiClient', () => {
 
     it('should make a POST request with body', async () => {
       const requestBody = { name: 'Test User' };
-      const mockResponse = { data: { id: 1, ...requestBody } };
+      const mockResponse = { data: { id: 1, ...requestBody }, pagination: { total: 1, totalPages: 1 } };
       global.fetch = jest.fn().mockImplementation((url: URL | string, init?: RequestInit) => {
         expect(url.toString()).toBe('http://localhost:3000/test-api/users');
         expect(init).toEqual(expect.objectContaining({
@@ -115,7 +115,7 @@ describe('BaseApiClient', () => {
         body: requestBody,
       });
 
-      expect(result).toEqual(mockResponse.data);
+      expect(result).toEqual(mockResponse);
       expect(global.fetch).toHaveBeenCalled();
     });
 
@@ -211,7 +211,7 @@ describe('BaseApiClient', () => {
     });
 
     it('should handle server-side rendering (window undefined)', async () => {
-      const mockResponse = { data: { id: 1 } };
+      const mockResponse = { data: { id: 1 }, pagination: { total: 1, totalPages: 1 } };
       const originalWindow = global.window;
       delete (global as any).window;
 

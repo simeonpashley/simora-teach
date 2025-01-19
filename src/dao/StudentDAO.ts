@@ -42,7 +42,7 @@ export class StudentDAO {
 
     // Get total count for pagination
     const totalCount = await db
-      .select({ count: sql<number>`count(*)` })
+      .select({ count: sql<string>`count(*)` }) // count(*) returns a string
       .from(studentOverviewSchema)
       .execute()
       .then(result => result[0]?.count ?? 0);
@@ -71,10 +71,10 @@ export class StudentDAO {
       data: students,
       pagination: pagination
         ? {
-            total: totalCount,
+            total: Number(totalCount),
             pageSize: pagination.pageSize,
             page: pagination.page,
-            totalPages: Math.ceil(totalCount / pagination.pageSize),
+            totalPages: Math.ceil(Number(totalCount) / pagination.pageSize),
           }
         : undefined,
     };
