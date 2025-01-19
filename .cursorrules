@@ -5,11 +5,25 @@
 - when making changes, the comments should be absolute not relative. BAD: "// fixed undefined" GOOD: "// set default value"
 - Reuse, extend or create reusable components where appropriate and use them in the project. UI: `src/components/ui`
 - Use table package @tanstack/react-table by default
+- client/browser uses "app-api-clients" for api clients to access it's own api.
 - "Simora" is the name of the company. "Simora Teach", "@simora/teach" is the internal & technical name of the project.
 - "Rose" or "Rose by Simora" is the public facing name of the product.
 </general_guidelines>
 
+<data_access>
+There is a clear separation of concerns as described below:
+
+1. Client component uses an API client "/src/app-api-clients/" to send a request to it's own API.
+2. The API client communicates with the API server via local URL, e.g.,  URL:`/api/students`
+3. The API server listens via `src/app/api/students/route.ts` and interacts with the service layer.
+4. The service layer resides under "/src/services". The service layer processes the request, applying any business logic, validation rules or data access.
+5. If require, service layer calls the DAO layer "/src/dao" to perform database operations.
+6. DAO layer uses Drizzle ORM for database, responding the service layer.
+
+</data_access>
+
 <visual_design>
+
 - Fully responsive across devices, with a mobile-first approach.
 - Use CSS variables for colour themes
   - Define variables in `src/styles/globals.css` under `:root`

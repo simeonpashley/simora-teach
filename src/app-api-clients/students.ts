@@ -11,6 +11,10 @@ export type StudentSortParams = {
   sortOrder: 'asc' | 'desc';
 };
 
+/**
+ * StudentsApi class
+ * @description API client for students
+ */
 export class StudentsApi extends BaseApiClient {
   constructor() {
     super('/api/students');

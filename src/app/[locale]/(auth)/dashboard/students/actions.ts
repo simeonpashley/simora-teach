@@ -1,7 +1,7 @@
 'use server';
 
-import type { Student, StudentFilters, StudentSortParams } from '@/api/students';
-import type { PaginationParams } from '@/api/types';
+import type { Student, StudentFilters, StudentSortParams } from '@/app-api-clients/students';
+import type { PaginationParams } from '@/app-api-clients/types';
 import { studentService } from '@/services/StudentService';
 
 export type GetStudentsResponse = {

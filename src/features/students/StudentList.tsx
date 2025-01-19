@@ -4,8 +4,8 @@ import type { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Student, StudentStatus } from '@/api/students';
-import { studentsApi } from '@/api/students';
+import type { Student, StudentStatus } from '@/app-api-clients/students';
+import { studentsApi } from '@/app-api-clients/students';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
