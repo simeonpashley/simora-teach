@@ -121,6 +121,8 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   const canSort = sorting && header.column.getCanSort();
+                  const sortDirection = header.column.getIsSorted();
+
                   return (
                     <TableHead
                       key={header.id}
@@ -128,7 +130,13 @@ export function DataTable<TData, TValue>({
                         canSort && 'cursor-pointer select-none',
                         header.column.getCanSort() && 'cursor-pointer select-none',
                       )}
-                      onClick={header.column.getToggleSortingHandler()}
+                      onClick={() => {
+                        if (!canSort) {
+                          return;
+                        }
+                        const id = header.column.id;
+                        sorting.onSort(id);
+                      }}
                     >
                       <div className="flex items-center gap-2">
                         {flexRender(
@@ -137,10 +145,7 @@ export function DataTable<TData, TValue>({
                         )}
                         {canSort && (
                           <span className="text-xs">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? null}
+                            {sortDirection === 'asc' ? '↑' : sortDirection === 'desc' ? '↓' : ''}
                           </span>
                         )}
                       </div>
