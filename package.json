@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "dotenv -c production -- drizzle-kit migrate",
+    "db:reset": "dotenv -c production -- tsx lib/resetDatabase.ts",
     "db:seed": "dotenv -c production -- tsx lib/seed.ts",
     "db:studio": "dotenv -c production -- drizzle-kit studio",
     "storybook": "storybook dev -p 6006",

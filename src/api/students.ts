@@ -1,10 +1,13 @@
-import type { StudentFilters, StudentOverview } from '@/dao/StudentDAO';
+import type { Student as daoStudent, StudentFilters as daoStudentFilters } from '@/dao/StudentDAO';
 
 import { BaseApiClient } from './base';
 import type { PaginationParams } from './types';
 
+export type Student = daoStudent;
+export type StudentFilters = daoStudentFilters;
+export type StudentStatus = daoStudent['status'];
 export type StudentSortParams = {
-  sortBy: keyof StudentOverview;
+  sortBy: keyof Student;
   sortOrder: 'asc' | 'desc';
 };
 
@@ -19,7 +22,7 @@ export class StudentsApi extends BaseApiClient {
     sort?: StudentSortParams,
   ) {
     try {
-      return await this.request<StudentOverview[]>('', {
+      return await this.request<Student[]>('', {
         params: {
           ...filters,
           ...pagination,
@@ -37,31 +40,31 @@ export class StudentsApi extends BaseApiClient {
     }
   }
 
-  async get(id: number) {
-    return await this.request<StudentOverview>(`/${id}`);
+  async get(id: string) {
+    return await this.request<Student>(`/${id}`);
   }
 
-  async create(student: Omit<StudentOverview, 'id' | 'createdAt' | 'updatedAt'>) {
-    return await this.request<StudentOverview>('', {
+  async create(student: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) {
+    return await this.request<Student>('', {
       method: 'POST',
       body: student,
     });
   }
 
-  async update(id: number, student: Partial<Omit<StudentOverview, 'id' | 'createdAt' | 'updatedAt'>>) {
-    return await this.request<StudentOverview>(`/${id}`, {
+  async update(id: string, student: Partial<Omit<Student, 'id' | 'createdAt' | 'updatedAt'>>) {
+    return await this.request<Student>(`/${id}`, {
       method: 'PATCH',
       body: student,
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     await this.request(`/${id}`, {
       method: 'DELETE',
     });
   }
 
-  async deleteMany(ids: number[]) {
+  async deleteMany(ids: string[]) {
     await this.request('', {
       method: 'DELETE',
       body: { ids },

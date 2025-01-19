@@ -19,7 +19,7 @@ import type { Student } from './StudentListColumns';
 
 type StudentActionsProps = {
   selectedStudents: Student[];
-  onDeleteStudents?: (studentIds: number[]) => Promise<void>;
+  onDeleteStudents?: (studentIds: string[]) => Promise<void>;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: (open: boolean) => void;
   locale: string;

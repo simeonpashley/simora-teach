@@ -72,18 +72,18 @@ jest.mock('@/components/ui/select', () => {
 
 // Test data types
 export type TestData = {
-  id: number;
+  id: string;
   name: string;
   age: number;
 };
 
 // Test data
 export const testData: TestData[] = [
-  { id: 1, name: 'Alice', age: 25 },
-  { id: 2, name: 'Bob', age: 30 },
-  { id: 3, name: 'Charlie', age: 35 },
-  { id: 4, name: 'David', age: 40 },
-  { id: 5, name: 'Eve', age: 45 },
+  { id: 'uuid-1', name: 'Alice', age: 25 },
+  { id: 'uuid-2', name: 'Bob', age: 30 },
+  { id: 'uuid-3', name: 'Charlie', age: 35 },
+  { id: 'uuid-4', name: 'David', age: 40 },
+  { id: 'uuid-5', name: 'Eve', age: 45 },
 ];
 
 // Test columns

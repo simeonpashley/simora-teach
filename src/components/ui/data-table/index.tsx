@@ -23,7 +23,7 @@ import { DataTableBody } from './DataTableBody';
 import { DataTableFooter } from './DataTableFooter';
 import { DataTableHeader } from './DataTableHeader';
 
-type DataTableProps<TData extends { id: number }, TValue> = {
+type DataTableProps<TData extends { id: string }, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   pagination?: {
@@ -45,12 +45,12 @@ type DataTableProps<TData extends { id: number }, TValue> = {
     onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
   };
   selection?: {
-    selectedRows: Set<number>;
-    onSelectedRowsChange: (selectedRows: Set<number>) => void;
+    selectedRows: Set<string>;
+    onSelectedRowsChange: (selectedRows: Set<string>) => void;
   };
   selectionActions?: Array<{
     label: string;
-    onClick: (selectedIds: number[]) => void;
+    onClick: (selectedIds: string[]) => void;
   }>;
   noResults?: string;
   className?: string;
@@ -75,7 +75,7 @@ const convertPaginationState = (pagination?: DataTableProps<any, any>['paginatio
   };
 };
 
-export function DataTable<TData extends { id: number }, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   data,
   columns,
   pagination,
@@ -129,7 +129,7 @@ export function DataTable<TData extends { id: number }, TValue>({
       }
     },
     enableRowSelection: !!selection,
-    getRowId: row => String((row as { id: number }).id),
+    getRowId: row => String((row as { id: string }).id),
     onRowSelectionChange: selection
       ? (updatedSelection) => {
           if (typeof updatedSelection === 'function') {
@@ -140,13 +140,13 @@ export function DataTable<TData extends { id: number }, TValue>({
             selection.onSelectedRowsChange(
               new Set(Object.entries(newSelection)
                 .filter(([, selected]) => selected)
-                .map(([id]) => Number(id))),
+                .map(([id]) => id)),
             );
           } else {
             selection.onSelectedRowsChange(
               new Set(Object.entries(updatedSelection)
                 .filter(([, selected]) => selected)
-                .map(([id]) => Number(id))),
+                .map(([id]) => id)),
             );
           }
         }

@@ -1,8 +1,7 @@
 'use server';
 
-import type { Student, StudentSortParams } from '@/api/students';
+import type { Student, StudentFilters, StudentSortParams } from '@/api/students';
 import type { PaginationParams } from '@/api/types';
-import type { StudentFilters } from '@/dao/StudentDAO';
 import { studentService } from '@/services/StudentService';
 
 export type GetStudentsResponse = {
@@ -29,7 +28,7 @@ export async function getStudents(
   }
 }
 
-export async function deleteStudents(studentIds: number[]) {
+export async function deleteStudents(studentIds: string[]) {
   try {
     await studentService.deleteStudents(studentIds);
   } catch (error) {

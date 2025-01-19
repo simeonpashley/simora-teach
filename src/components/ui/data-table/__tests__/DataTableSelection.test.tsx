@@ -11,7 +11,7 @@ describe('DataTable Selection', () => {
   };
 
   const selectionProps = {
-    selectedRows: new Set<number>(),
+    selectedRows: new Set<string>(),
     onSelectedRowsChange: jest.fn(),
   };
 
@@ -47,8 +47,8 @@ describe('DataTable Selection', () => {
   });
 
   it('selects individual rows', async () => {
-    let selectedRows = new Set<number>();
-    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<number>) => {
+    let selectedRows = new Set<string>();
+    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<string>) => {
       selectedRows = newSelection;
     });
 
@@ -73,12 +73,12 @@ describe('DataTable Selection', () => {
     await userEvent.click(firstRowCheckbox);
 
     expect(onSelectedRowsChange).toHaveBeenCalled();
-    expect(selectedRows).toEqual(new Set([1])); // First row ID is 1
+    expect(selectedRows).toEqual(new Set(['uuid-1'])); // First row ID is 1
   });
 
   it('selects all rows when header checkbox is clicked', async () => {
-    let selectedRows = new Set<number>();
-    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<number>) => {
+    let selectedRows = new Set<string>();
+    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<string>) => {
       selectedRows = newSelection;
     });
 
@@ -96,12 +96,12 @@ describe('DataTable Selection', () => {
     await userEvent.click(selectAllCheckbox);
 
     expect(onSelectedRowsChange).toHaveBeenCalled();
-    expect(selectedRows).toEqual(new Set([1, 2, 3, 4, 5])); // All row IDs
+    expect(selectedRows).toEqual(new Set<string>(['uuid-1', 'uuid-2', 'uuid-3', 'uuid-4', 'uuid-5'])); // All row IDs
   });
 
   it('deselects all rows when header checkbox is clicked again', async () => {
-    let selectedRows = new Set([1, 2, 3, 4, 5]); // All row IDs
-    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<number>) => {
+    let selectedRows = new Set<string>(['uuid-1', 'uuid-2', 'uuid-3', 'uuid-4', 'uuid-5']); // All row IDs
+    const onSelectedRowsChange = jest.fn().mockImplementation((newSelection: Set<string>) => {
       selectedRows = newSelection;
     });
 

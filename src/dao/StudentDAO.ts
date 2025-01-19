@@ -1,12 +1,12 @@
 import { and, asc, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
 import { db } from '@/libs/DB';
-import { studentOverviewSchema } from '@/models/Schema';
+import { studentSchema } from '@/models/Schema';
 
 export type SortOrder = 'asc' | 'desc';
 export type StudentStatus = 'active' | 'inactive' | 'pending';
 
-export type StudentOverview = typeof studentOverviewSchema.$inferSelect;
+export type Student = typeof studentSchema.$inferSelect;
 
 /**
  * StudentFilters type
@@ -26,7 +26,7 @@ export type PaginationParams = {
 };
 
 export type SortParams = {
-  sortBy: keyof typeof studentOverviewSchema.$inferSelect;
+  sortBy: keyof typeof studentSchema.$inferSelect;
   sortOrder: SortOrder;
 };
 
@@ -42,7 +42,7 @@ export class StudentDAO {
    * @param sort - sort parameters
    * @returns an object containing the students and pagination information
    * {
-          data: StudentOverview[];
+          data: Student[];
           pagination?: Pagination;
       }
    *
@@ -57,33 +57,33 @@ export class StudentDAO {
     if (filters.search) {
       conditions.push(
         or(
-          ilike(studentOverviewSchema.firstName, `%${filters.search}%`),
-          ilike(studentOverviewSchema.lastName, `%${filters.search}%`),
+          ilike(studentSchema.firstName, `%${filters.search}%`),
+          ilike(studentSchema.lastName, `%${filters.search}%`),
         ),
       );
     }
     if (filters.status) {
-      conditions.push(eq(studentOverviewSchema.status, filters.status));
+      conditions.push(eq(studentSchema.status, filters.status));
     }
 
     // Get total count for pagination
     const totalCount = await db
       .select({ count: sql<string>`count(*)` }) // count(*) returns a string
-      .from(studentOverviewSchema)
+      .from(studentSchema)
       .execute()
       .then(result => result[0]?.count ?? 0);
 
     // Build and execute main query
     const query = db
       .select()
-      .from(studentOverviewSchema)
+      .from(studentSchema)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(
         sort
           ? (sort.sortOrder === 'desc' ? desc : asc)(
-              studentOverviewSchema[sort.sortBy],
+              studentSchema[sort.sortBy],
             )
-          : asc(studentOverviewSchema.id),
+          : asc(studentSchema.id),
       );
 
     // Apply pagination if provided
@@ -106,20 +106,20 @@ export class StudentDAO {
     };
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const result = await db
       .select()
-      .from(studentOverviewSchema)
-      .where(eq(studentOverviewSchema.id, id))
+      .from(studentSchema)
+      .where(eq(studentSchema.id, id))
       .limit(1);
     return result[0];
   }
 
-  async deleteMany(ids: number[]) {
+  async deleteMany(ids: string[]) {
     await db
-      .delete(studentOverviewSchema)
+      .delete(studentSchema)
       .where(
-        or(...ids.map(id => eq(studentOverviewSchema.id, id))),
+        or(...ids.map(id => eq(studentSchema.id, id))),
       );
   }
 }

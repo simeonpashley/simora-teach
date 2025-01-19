@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 
 import type { StudentStatus } from '@/dao/StudentDAO';
-import type { studentOverviewSchema } from '@/models/Schema';
+import type { studentSchema } from '@/models/Schema';
 import { studentService } from '@/services/StudentService';
 import { ApiError } from '@/utils/apiError';
 
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     const pagination = page && pageSize ? { page, pageSize } : undefined;
     const sort = sortBy && sortOrder
-      ? { sortBy: sortBy as keyof typeof studentOverviewSchema.$inferSelect, sortOrder }
+      ? { sortBy: sortBy as keyof typeof studentSchema.$inferSelect, sortOrder }
       : undefined;
 
     const result = await studentService.getStudents(filters, pagination, sort);
@@ -80,7 +80,7 @@ export async function DELETE(request: NextRequest) {
 
     const body = await request.json();
     const { ids } = z.object({
-      ids: z.array(z.number()),
+      ids: z.array(z.string()),
     }).parse(body);
 
     await studentService.deleteStudents(ids);

@@ -33,14 +33,14 @@ describe('DataTable Edge Cases', () => {
 
   it('handles undefined values in data', () => {
     type TestDataWithOptional = {
-      id: number;
+      id: string;
       name?: string;
       age?: number;
     };
 
     const dataWithUndefined: TestDataWithOptional[] = [
-      { id: 1, name: undefined, age: 25 },
-      { id: 2, name: 'Bob', age: undefined },
+      { id: 'uuid-1', name: undefined, age: 25 },
+      { id: 'uuid-2', name: 'Bob', age: undefined },
     ];
 
     const columnsWithOptionalValues: ColumnDef<TestDataWithOptional, any>[] = [
@@ -91,14 +91,14 @@ describe('DataTable Edge Cases', () => {
 
   it('handles data with missing required fields', () => {
     type TestDataWithRequired = {
-      id: number;
+      id: string;
       name: string;
       age: number;
     };
 
     const invalidData = [
-      { id: 1 }, // Missing name and age
-      { id: 2, name: 'Bob' }, // Missing age
+      { id: 'uuid-1' }, // Missing name and age
+      { id: 'uuid-2', name: 'Bob' }, // Missing age
     ] as TestDataWithRequired[];
 
     render(
@@ -115,7 +115,7 @@ describe('DataTable Edge Cases', () => {
   it('handles extremely long text content', () => {
     const longTextData = [
       {
-        id: 1,
+        id: 'uuid-1',
         name: 'A'.repeat(1000), // Very long name
         age: 25,
       },
@@ -138,12 +138,12 @@ describe('DataTable Edge Cases', () => {
   it('handles special characters in data', () => {
     const specialCharsData = [
       {
-        id: 1,
+        id: 'uuid-1',
         name: '!@#$%^&*()',
         age: 25,
       },
       {
-        id: 2,
+        id: 'uuid-2',
         name: '< > & " \'',
         age: 30,
       },

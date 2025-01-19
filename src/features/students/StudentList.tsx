@@ -4,6 +4,7 @@ import type { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
+import type { Student, StudentStatus } from '@/api/students';
 import { studentsApi } from '@/api/students';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -11,9 +12,8 @@ import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import type { StudentOverview, StudentStatus } from '@/dao/StudentDAO';
 
-import { type Student, useStudentColumns } from './StudentListColumns';
+import { useStudentColumns } from './StudentListColumns';
 
 // Default values
 const DEFAULT_PAGE_SIZE = 10;
@@ -22,17 +22,17 @@ export function StudentList() {
   const t = useTranslations('Students');
 
   // State
-  const [students, setStudents] = useState<StudentOverview[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<StudentStatus | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(1);
-  const [sortBy, setSortBy] = useState<keyof StudentOverview>('lastName');
+  const [sortBy, setSortBy] = useState<keyof Student>('lastName');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -42,10 +42,11 @@ export function StudentList() {
     setError(null);
 
     try {
+      const statusValue = status === 'active' || status === 'inactive' || status === 'pending' ? status : undefined;
       const response = await studentsApi.list(
-        { search: searchTerm || undefined, status },
+        { search: searchTerm || undefined, status: statusValue },
         { page, pageSize },
-        { sortBy: sortBy as keyof StudentOverview, sortOrder },
+        { sortBy: sortBy as keyof Student, sortOrder },
       );
 
       setStudents(response.data);
@@ -67,7 +68,7 @@ export function StudentList() {
   }, [fetchStudents]);
 
   // Selection handlers
-  const toggleSelection = useCallback((id: number) => {
+  const toggleSelection = useCallback((id: string) => {
     setSelectedIds(prev =>
       prev.includes(id)
         ? prev.filter(selectedId => selectedId !== id)
@@ -101,7 +102,7 @@ export function StudentList() {
 
   // Sort handler
   const handleSort = useCallback((field: string) => {
-    setSortBy(field as keyof StudentOverview);
+    setSortBy(field as keyof Student);
     setSortOrder(prev => field === sortBy && prev === 'asc' ? 'desc' : 'asc');
   }, [sortBy]);
 

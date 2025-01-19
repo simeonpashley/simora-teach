@@ -17,8 +17,8 @@ import { TableFilter } from '../table-filter';
 type DataTableHeaderProps<TData> = {
   table: Table<TData>;
   selection?: {
-    selectedRows: Set<number>;
-    onSelectedRowsChange: (selectedRows: Set<number>) => void;
+    selectedRows: Set<string>;
+    onSelectedRowsChange: (selectedRows: Set<string>) => void;
   };
   sorting?: {
     sortBy: string;

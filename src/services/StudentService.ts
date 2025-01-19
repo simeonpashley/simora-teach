@@ -10,7 +10,7 @@ export class StudentService {
     return studentDAO.findAll(filters, pagination, sort);
   }
 
-  async getStudentById(id: number) {
+  async getStudentById(id: string) {
     const student = await studentDAO.findById(id);
     if (!student) {
       throw new Error('Student not found');
@@ -18,7 +18,7 @@ export class StudentService {
     return student;
   }
 
-  async deleteStudents(ids: number[]) {
+  async deleteStudents(ids: string[]) {
     await studentDAO.deleteMany(ids);
   }
 }
