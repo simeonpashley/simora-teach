@@ -79,8 +79,8 @@ Table package: @tanstack/react-table <https://tanstack.com/table/latest/docs/int
 
 For each incomplete task below, once completed, write tests and test in isolation first, then project-wide tests.
 
-- [ ] Add row-level checkboxes and a "Select All" checkbox in the header.
-- [ ] Display a row above the table with actions for selected rows.
+- [x] Add row-level checkboxes and a "Select All" checkbox in the header.
+- [x] Display a row above the table with actions for selected rows.
 - [ ] Implement the Delete action for selected rows with confirmation before proceeding.
 - [ ] Add an Export action to export selected rows as a CSV file.
 - [ ] Write unit tests to verify:
