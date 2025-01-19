@@ -68,10 +68,12 @@ Table package: @tanstack/react-table https://tanstack.com/table/latest/docs/intr
 [x] Add sorting functionality for columns like ID and Name.
 [x] Implement pagination to limit the number of rows displayed at a time.
 [x] Implement filtering to allow filtering students by `status`.
-[ ] Write unit tests to verify:
-   [ ] Sorting, filtering, and search functionalities work as expected.
-   [ ] Pagination works correctly, including edge cases (e.g., last page, empty results).
-[ ] Ensure all tests pass before proceeding.
+[x] Create or update unit tests to verify:
+   [x] Sorting, filtering, and search functionalities work as expected.
+   [x] Pagination works correctly, including edge cases (e.g., last page, empty results).
+[x] Run tests individually then fix
+[x] Run tests project wide then fix
+[x] Ensure all tests pass before proceeding.
 
 ### Stage 3: Actions for Selected Rows
 

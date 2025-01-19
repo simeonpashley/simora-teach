@@ -32,6 +32,12 @@ type PaginationButtonsProps = {
   onPageSet: (pageIndex: number) => void;
 };
 
+/**
+ * PaginationButtons component
+ * @param pageIndex - zero based current page
+ * @param pageCount - total number of pages
+ * @param onPageSet - callback function to set the page index
+ */
 export function PaginationButtons({
   pageIndex,
   pageCount,
@@ -64,14 +70,14 @@ export function PaginationButtons({
       </span>
       <PaginationButton
         onClick={() => onPageSet(pageIndex + 1)}
-        disabled={pageIndex === pageCount}
+        disabled={pageIndex === pageCount - 1}
         testId="next-page"
       >
         {'>'}
       </PaginationButton>
       <PaginationButton
         onClick={() => onPageSet(pageCount)}
-        disabled={pageIndex === pageCount}
+        disabled={pageIndex === pageCount - 1}
         testId="last-page"
       >
         {'>>'}
