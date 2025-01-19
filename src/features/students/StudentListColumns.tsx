@@ -3,20 +3,12 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { useLocale, useTranslations } from 'next-intl';
 
+import type { Student } from '@/api/students';
 import { ActionIcon } from '@/components/ui/ActionIcon';
 import { Button } from '@/components/ui/button';
 import { SortButton } from '@/components/ui/SortButton';
 
-type Student = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date | null;
-  enrollmentDate: Date | null;
-  status: string | null;
-};
-
-export function useStudentColumns(students: Student[], selectedIds: number[], toggleSelection: (id: number) => void, toggleAllSelection: () => void): ColumnDef<Student>[] {
+export function useStudentColumns(students: Student[], selectedIds: number[], toggleSelection: (id: number) => void, toggleAllSelection: () => void): ColumnDef<Student, unknown>[] {
   const t = useTranslations('Students');
   const locale = useLocale();
 
