@@ -29,6 +29,12 @@
       }
     }
   },
+  "SignIn": {
+    "meta_title": "Sign In - Rose by Simora",
+    "meta_description": "Sign in to your Rose by Simora account",
+    "title": "Sign In",
+    "description": "Sign in to your Rose by Simora account"
+  },
   "SignUp": {
     "title": "Sign Up",
     "description": "Create your account to get started",
@@ -157,6 +163,7 @@
   "DataTable": {
     "no_results": "No results."
   },
+
   "Students": {
     "meta_title": "My Students - Simora Teach",
     "meta_description": "Manage and view your students",
@@ -168,6 +175,7 @@
     "enrollment_date": "Enrolled",
     "status": "Status",
     "actions": "Actions",
+    "edit": "Edit",
     "error_loading_students": "Error loading students",
     "search_placeholder": "Search students...",
     "all_statuses": "All Statuses",

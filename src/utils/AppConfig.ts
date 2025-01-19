@@ -6,7 +6,7 @@ const localePrefix: LocalePrefix<['en', 'cy', 'ga', 'fr', 'es', 'de'], 'as-neede
 
 // FIXME: Update this configuration file based on your project information
 export const AppConfig = {
-  name: 'SaaS Template',
+  name: 'Rose',
   locales: [
     {
       id: 'en',

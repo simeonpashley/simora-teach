@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { Student } from '@/api/students';
 import { Alert } from '@/components/ui/alert';
@@ -30,7 +31,21 @@ export function StudentList() {
     toggleAllSelection,
     deleteSelected,
   } = useStudents();
+  const [searchTerm, setSearchTerm] = useState(filters.search ?? '');
 
+  const debouncedSetFilters = useCallback((value: string) => {
+    setFilters({ ...filters, search: value });
+  }, [filters, setFilters]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      debouncedSetFilters(searchTerm);
+    }, 300); // Adjust the delay as needed
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm, debouncedSetFilters]);
   const columns = useStudentColumns(students, selectedIds, toggleSelection, toggleAllSelection);
 
   if (error) {
@@ -48,7 +63,7 @@ export function StudentList() {
         <Input
           placeholder={t('search_placeholder')}
           value={filters.search ?? ''}
-          onChange={e => setFilters({ ...filters, search: e.target.value })}
+          onChange={e => setSearchTerm(e.target.value)} // Update local state
           className="max-w-sm"
         />
         <Select
@@ -98,7 +113,7 @@ export function StudentList() {
                 pageIndex: pagination.page - 1,
                 pageSize: pagination.pageSize,
                 pageCount: pagination.totalPages ?? -1,
-                onPageChange: pageIndex => setPagination({ page: pageIndex + 1 }),
+                onPageChange: pageIndex => setPagination({ page: pageIndex }),
                 onPageSizeChange: pageSize => setPagination({ pageSize }),
               }}
               sorting={{

@@ -12,6 +12,7 @@ import {
 
 import { ApiError } from '@/api/base';
 import { studentsApi } from '@/api/students';
+import type { StudentFilters } from '@/dao/StudentDAO';
 
 import type { StudentsContextType, StudentsState } from './students-context-types';
 import { defaultPagination, defaultSort } from './students-context-types';
@@ -142,7 +143,10 @@ export function StudentsProvider({ children }: PropsWithChildren) {
 
   const setFilters = useCallback((newFilters: StudentsState['filters']) => {
     debug('filters', 'Setting new filters:', newFilters);
-    setFiltersState(newFilters);
+    setFiltersState((prevFilters: StudentFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
     setPaginationState(prev => ({ ...prev, page: 1 }));
   }, []);
 

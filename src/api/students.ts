@@ -1,14 +1,10 @@
+import type { StudentFilters } from '@/dao/StudentDAO';
 import type { studentOverviewSchema } from '@/models/Schema';
 
 import { BaseApiClient } from './base';
 import type { ApiResponse, PaginationParams } from './types';
 
 export type Student = typeof studentOverviewSchema.$inferSelect;
-
-export type StudentFilters = {
-  search?: string;
-  status?: string;
-};
 
 export type StudentSortParams = {
   sortBy: keyof Student;
