@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 
-import { StudentsProvider } from '@/contexts/StudentsContext';
 import { TitleBar } from '@/features/dashboard/TitleBar';
 import { StudentList } from '@/features/students/StudentList';
 
@@ -24,9 +23,7 @@ export default async function StudentsPage() {
       />
 
       <div className="rounded-md border bg-card p-6">
-        <StudentsProvider>
-          <StudentList />
-        </StudentsProvider>
+        <StudentList />
       </div>
     </div>
   );

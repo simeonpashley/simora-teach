@@ -4,48 +4,109 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 import type { Student } from '@/api/students';
+import { studentsApi } from '@/api/students';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { useStudents } from '@/contexts/useStudents';
 
 import { useStudentColumns } from './StudentListColumns';
 
+// Default values
+const DEFAULT_PAGE_SIZE = 10;
+
 export function StudentList() {
   const t = useTranslations('Students');
-  const {
-    students,
-    isLoading,
-    error,
-    selectedIds,
-    filters,
-    pagination,
-    sort,
-    setFilters,
-    setPagination,
-    setSort,
-    toggleSelection,
-    toggleAllSelection,
-    deleteSelected,
-  } = useStudents();
-  const [searchTerm, setSearchTerm] = useState(filters.search ?? '');
 
-  const debouncedSetFilters = useCallback((value: string) => {
-    setFilters({ ...filters, search: value });
-  }, [filters, setFilters]);
+  // State
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [status, setStatus] = useState<string | undefined>();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState<keyof Student>('lastName');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  // Fetch data
+  const fetchStudents = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await studentsApi.list(
+        { search: searchTerm || undefined, status },
+        { page, pageSize },
+        { sortBy, sortOrder },
+      );
+
+      if (Array.isArray(response)) {
+        setStudents(response);
+        setTotalPages(Math.ceil(response.length / pageSize));
+      } else if (response && typeof response === 'object') {
+        setStudents(response.data);
+        if (response.pagination) {
+          setTotalPages(response.pagination.totalPages);
+        }
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error : new Error('Failed to load students'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [searchTerm, status, page, pageSize, sortBy, sortOrder]);
+
+  // Initial load and data refresh
   useEffect(() => {
-    const handler = setTimeout(() => {
-      debouncedSetFilters(searchTerm);
-    }, 300); // Adjust the delay as needed
+    const timeoutId = setTimeout(fetchStudents, 300);
+    return () => clearTimeout(timeoutId);
+  }, [fetchStudents]);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm, debouncedSetFilters]);
+  // Selection handlers
+  const toggleSelection = useCallback((id: number) => {
+    setSelectedIds(prev =>
+      prev.includes(id)
+        ? prev.filter(selectedId => selectedId !== id)
+        : [...prev, id],
+    );
+  }, []);
+
+  const toggleAllSelection = useCallback(() => {
+    setSelectedIds(prev =>
+      prev.length === students.length
+        ? []
+        : students.map(student => student.id),
+    );
+  }, [students]);
+
+  // Delete handler
+  const handleDelete = useCallback(async () => {
+    if (selectedIds.length === 0 || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await studentsApi.deleteMany(selectedIds);
+      setSelectedIds([]);
+      await fetchStudents();
+    } catch (error) {
+      setError(error instanceof Error ? error : new Error('Failed to delete students'));
+    }
+  }, [selectedIds, isLoading, fetchStudents]);
+
+  // Sort handler
+  const handleSort = useCallback((field: string) => {
+    setSortBy(field as keyof Student);
+    setSortOrder(prev => field === sortBy && prev === 'asc' ? 'desc' : 'asc');
+  }, [sortBy]);
+
+  // Get columns configuration
   const columns = useStudentColumns(students, selectedIds, toggleSelection, toggleAllSelection);
 
   if (error) {
@@ -62,13 +123,13 @@ export function StudentList() {
       <div className="flex gap-4">
         <Input
           placeholder={t('search_placeholder')}
-          value={filters.search ?? ''}
-          onChange={e => setSearchTerm(e.target.value)} // Update local state
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
         <Select
-          value={filters.status || 'all'}
-          onValueChange={value => setFilters({ ...filters, status: value === 'all' ? undefined : value })}
+          value={status || 'all'}
+          onValueChange={value => setStatus(value === 'all' ? undefined : value)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder={t('all_statuses')} />
@@ -83,6 +144,7 @@ export function StudentList() {
           </SelectContent>
         </Select>
       </div>
+
       {/* Selected Actions */}
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-4 rounded bg-muted/50 p-2">
@@ -90,7 +152,7 @@ export function StudentList() {
           <Button
             variant="destructive"
             size="sm"
-            onClick={deleteSelected}
+            onClick={handleDelete}
             disabled={isLoading}
           >
             {t('delete_selected')}
@@ -107,26 +169,22 @@ export function StudentList() {
           )
         : (
             <DataTable<Student, unknown>
-              data={students ?? []}
+              data={students}
               columns={columns}
               pagination={{
-                pageIndex: pagination.page - 1,
-                pageSize: pagination.pageSize,
-                pageCount: pagination.totalPages ?? -1,
-                onPageChange: pageIndex => setPagination({ page: pageIndex }),
-                onPageSizeChange: pageSize => setPagination({ pageSize }),
+                pageIndex: page - 1,
+                pageSize,
+                pageCount: totalPages,
+                onPageChange: index => setPage(index),
+                onPageSizeChange: (size) => {
+                  setPageSize(size);
+                  setPage(1);
+                },
               }}
               sorting={{
-                sortBy: sort.sortBy,
-                sortOrder: sort.sortOrder,
-                onSort: (field) => {
-                  setSort({
-                    sortBy: field as keyof Student,
-                    sortOrder: field === sort.sortBy && sort.sortOrder === 'asc'
-                      ? 'desc'
-                      : 'asc',
-                  });
-                },
+                sortBy,
+                sortOrder,
+                onSort: handleSort,
               }}
             />
           )}

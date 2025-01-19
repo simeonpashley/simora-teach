@@ -8,7 +8,13 @@ import {
 } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -128,11 +134,16 @@ export function DataTable<TData, TValue>({
               value={String(pagination.pageSize)}
               onValueChange={value => pagination.onPageSizeChange(Number(value))}
             >
-              {[10, 20, 30, 50].map(size => (
-                <option key={size} value={String(size)}>
-                  {size}
-                </option>
-              ))}
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[10, 20, 30, 50].map(size => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
 
