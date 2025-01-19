@@ -35,7 +35,7 @@ import { cn } from '@/lib/utils';
 import { PaginationButtons } from './PaginationButtons';
 import { TableFilter } from './table-filter';
 
-type DataTableProps<TData, TValue> = {
+type DataTableProps<TData extends { id: number }, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   pagination?: {
@@ -56,6 +56,14 @@ type DataTableProps<TData, TValue> = {
     columnFilters: ColumnFiltersState;
     onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
   };
+  selection?: {
+    selectedRows: Set<number>;
+    onSelectedRowsChange: (selectedRows: Set<number>) => void;
+  };
+  selectionActions?: Array<{
+    label: string;
+    onClick: (selectedIds: number[]) => void;
+  }>;
   noResults?: string;
   className?: string;
 };
@@ -79,12 +87,14 @@ const convertPaginationState = (pagination?: DataTableProps<any, any>['paginatio
   };
 };
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: number }, TValue>({
   data,
   columns,
   pagination,
   sorting,
   filtering,
+  selection,
+  selectionActions,
   noResults = 'No results found.',
   className,
 }: DataTableProps<TData, TValue>) {
@@ -102,6 +112,11 @@ export function DataTable<TData, TValue>({
       pagination: convertPaginationState(pagination),
       sorting: convertSortingState(sorting),
       columnFilters: filtering?.columnFilters ?? [],
+      rowSelection: selection
+        ? Object.fromEntries(
+            Array.from(selection.selectedRows).map(id => [String(id), true]),
+          )
+        : {},
     },
     manualSorting: true,
     enableSorting: true,
@@ -115,6 +130,29 @@ export function DataTable<TData, TValue>({
       }
     },
     onColumnFiltersChange: filtering?.onColumnFiltersChange,
+    enableRowSelection: !!selection,
+    getRowId: row => String((row as { id: number }).id),
+    onRowSelectionChange: selection
+      ? (updatedSelection) => {
+          if (typeof updatedSelection === 'function') {
+            const currentSelection = Object.fromEntries(
+              Array.from(selection.selectedRows).map(id => [String(id), true]),
+            );
+            const newSelection = updatedSelection(currentSelection);
+            selection.onSelectedRowsChange(
+              new Set(Object.entries(newSelection)
+                .filter(([, selected]) => selected)
+                .map(([id]) => Number(id))),
+            );
+          } else {
+            selection.onSelectedRowsChange(
+              new Set(Object.entries(updatedSelection)
+                .filter(([, selected]) => selected)
+                .map(([id]) => Number(id))),
+            );
+          }
+        }
+      : undefined,
   });
 
   const { rows } = table.getRowModel();
@@ -127,6 +165,33 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn('space-y-4', className)}>
+      {selection && selectionActions && selection.selectedRows.size > 0 && (
+        <div
+          data-testid="selection-actions"
+          className="flex items-center justify-between rounded-md border bg-muted px-4 py-2"
+        >
+          <span className="text-sm text-muted-foreground">
+            {selection.selectedRows.size}
+            {' '}
+            {selection.selectedRows.size === 1 ? 'row' : 'rows'}
+            {' '}
+            selected
+          </span>
+          <div className="flex items-center gap-2">
+            {selectionActions.map(action => (
+              <button
+                key={action.label}
+                type="button"
+                onClick={() => action.onClick(Array.from(selection.selectedRows))}
+                className="rounded px-2 py-1 text-sm font-medium hover:bg-muted-foreground/10"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="rounded-md border">
         {pagination && (
           <div className="px-4 py-2 text-sm text-muted-foreground">
@@ -137,6 +202,17 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
+                {selection && (
+                  <TableHead key={`${headerGroup.id}-selection`} className="w-[40px] px-2">
+                    <input
+                      type="checkbox"
+                      aria-label="Select all"
+                      checked={table.getIsAllRowsSelected()}
+                      onChange={table.getToggleAllRowsSelectedHandler()}
+                      className="size-4 rounded border-gray-300"
+                    />
+                  </TableHead>
+                )}
                 {headerGroup.headers.map((header) => {
                   const canSort = sorting && header.column.getCanSort();
                   const sortDirection = header.column.getIsSorted();
@@ -190,7 +266,7 @@ export function DataTable<TData, TValue>({
               ? (
                   <TableRow>
                     <TableCell
-                      colSpan={columns.length}
+                      colSpan={columns.length + (selection ? 1 : 0)}
                       className="h-24 text-center"
                     >
                       {noResults}
@@ -200,6 +276,17 @@ export function DataTable<TData, TValue>({
               : (
                   rows.map(row => (
                     <TableRow key={row.id}>
+                      {selection && (
+                        <TableCell className="w-[40px] px-2">
+                          <input
+                            type="checkbox"
+                            data-row-id={String((row.original as { id: number }).id)}
+                            checked={row.getIsSelected()}
+                            onChange={row.getToggleSelectedHandler()}
+                            className="size-4 rounded border-gray-300"
+                          />
+                        </TableCell>
+                      )}
                       {row.getVisibleCells().map(cell => (
                         <TableCell key={cell.id}>
                           {flexRender(
