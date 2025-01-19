@@ -4,10 +4,11 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  type PaginationState,
+  type SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -23,6 +24,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+
+import { PaginationButtons } from './PaginationButtons';
 
 type DataTableProps<TData, TValue> = {
   data: TData[];
@@ -42,25 +46,26 @@ type DataTableProps<TData, TValue> = {
     onSort: (field: string) => void;
   };
   noResults?: string;
+  className?: string;
 };
 
-const PaginationButton = ({
-  onClick,
-  disabled,
-  testId,
-  children,
-}: { onClick: () => void; disabled: boolean; testId: string; children: React.ReactNode }) => {
-  return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={onClick}
-      disabled={disabled}
-      data-testid={testId}
-    >
-      {children}
-    </Button>
-  );
+// Utility function to convert sorting state
+const convertSortingState = (sorting?: DataTableProps<any, any>['sorting']): SortingState => {
+  if (!sorting) {
+    return [];
+  }
+  return [{
+    id: sorting.sortBy,
+    desc: sorting.sortOrder === 'desc',
+  }];
+};
+
+// Utility function to convert pagination state
+const convertPaginationState = (pagination?: DataTableProps<any, any>['pagination']): PaginationState => {
+  return {
+    pageIndex: pagination?.pageIndex ?? 0,
+    pageSize: pagination?.pageSize ?? 10,
+  };
 };
 
 export function DataTable<TData, TValue>({
@@ -69,6 +74,7 @@ export function DataTable<TData, TValue>({
   pagination,
   sorting,
   noResults = 'No results found.',
+  className,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data: data || [],
@@ -76,49 +82,65 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: pagination?.pageCount ?? -1,
+    state: {
+      pagination: convertPaginationState(pagination),
+      sorting: convertSortingState(sorting),
+    },
+    manualSorting: true,
+    enableSorting: true,
+    enableMultiSort: false,
+    onSortingChange: (updatedSorting) => {
+      if (sorting && Array.isArray(updatedSorting) && updatedSorting.length > 0) {
+        const [sort] = updatedSorting;
+        if (sort?.id) {
+          sorting.onSort(sort.id);
+        }
+      }
+    },
   });
 
-  const index = pagination?.pageIndex ?? 0;
-  const pageSize = pagination?.pageSize ?? 10;
-  const totalRows = pagination?.totalRows ?? 1;
-  const rows = table.getRowModel().rows;
-  const from = index * pageSize + 1;
-  const to = Math.min(index * pageSize + pageSize, totalRows);
+  const { rows } = table.getRowModel();
+  const from = (pagination?.pageIndex ?? 0) * (pagination?.pageSize ?? 10) + 1;
+  const to = Math.min(
+    (pagination?.pageIndex ?? 0) * (pagination?.pageSize ?? 10) + (pagination?.pageSize ?? 10),
+    pagination?.totalRows ?? 1,
+  );
+  const total = pagination?.totalRows ?? 1;
 
   return (
-    <div className="space-y-4">
+    <div className={cn('space-y-4', className)}>
       <div className="rounded-md border">
-        <h3>
-          {`Showing ${from} - ${to} of ${totalRows} students`}
-        </h3>
+        {pagination && (
+          <div className="px-4 py-2 text-sm text-muted-foreground">
+            {`Showing ${from} - ${to} of ${total} items`}
+          </div>
+        )}
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const column = header.column.columnDef as ColumnDef<TData, TValue> & {
-                    accessorKey?: string;
-                  };
-                  const canSort = sorting && column.accessorKey;
+                  const canSort = sorting && header.column.getCanSort();
                   return (
                     <TableHead
                       key={header.id}
-                      className={canSort ? 'cursor-pointer select-none' : ''}
-                      onClick={() => {
-                        if (canSort) {
-                          sorting.onSort(column.accessorKey as string);
-                        }
-                      }}
+                      className={cn(
+                        canSort && 'cursor-pointer select-none',
+                        header.column.getCanSort() && 'cursor-pointer select-none',
+                      )}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       <div className="flex items-center gap-2">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {canSort
-                        && column.accessorKey === sorting.sortBy && (
+                        {canSort && (
                           <span className="text-xs">
-                            {sorting.sortOrder === 'asc' ? '↑' : '↓'}
+                            {{
+                              asc: '↑',
+                              desc: '↓',
+                            }[header.column.getIsSorted() as string] ?? null}
                           </span>
                         )}
                       </div>
@@ -145,7 +167,10 @@ export function DataTable<TData, TValue>({
                     <TableRow key={row.id}>
                       {row.getVisibleCells().map(cell => (
                         <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
@@ -176,45 +201,11 @@ export function DataTable<TData, TValue>({
             </Select>
           </div>
 
-          <div data-testid="pagination-buttons" className="flex items-center gap-2">
-            <PaginationButton
-              onClick={() => pagination.onPageSet(0)}
-              disabled={pagination.pageIndex === 0}
-              testId="first-page"
-            >
-              {'<<'}
-            </PaginationButton>
-            <PaginationButton
-              onClick={() => pagination.onPageSet(pagination.pageIndex - 1)}
-              disabled={pagination.pageIndex === 0}
-              testId="previous-page"
-            >
-              {'<'}
-            </PaginationButton>
-            <span className="text-sm">
-              Page
-              {' '}
-              {pagination.pageIndex}
-              {' '}
-              of
-              {' '}
-              {pagination.pageCount}
-            </span>
-            <PaginationButton
-              onClick={() => pagination.onPageSet(pagination.pageIndex + 1)}
-              disabled={pagination.pageIndex === pagination.pageCount}
-              testId="next-page"
-            >
-              {'>'}
-            </PaginationButton>
-            <PaginationButton
-              onClick={() => pagination.onPageSet(pagination.pageCount)}
-              disabled={pagination.pageIndex === pagination.pageCount}
-              testId="last-page"
-            >
-              {'>>'}
-            </PaginationButton>
-          </div>
+          <PaginationButtons
+            pageIndex={pagination.pageIndex}
+            pageCount={pagination.pageCount}
+            onPageSet={pagination.onPageSet}
+          />
         </div>
       )}
     </div>
