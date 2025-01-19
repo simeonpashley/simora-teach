@@ -2,6 +2,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 
+import type { StudentStatus } from '@/dao/StudentDAO';
 import type { studentOverviewSchema } from '@/models/Schema';
 import { studentService } from '@/services/StudentService';
 import { ApiError } from '@/utils/apiError';
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     const filters = {
       ...(search && { search }),
-      ...(status && { status }),
+      ...(status && { status: status as StudentStatus }),
     };
 
     const pagination = page && pageSize ? { page, pageSize } : undefined;

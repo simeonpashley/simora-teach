@@ -154,9 +154,11 @@ export function DataTable<TData extends { id: number }, TValue>({
   });
 
   const { rows } = table.getRowModel();
-  const from = (pagination?.pageIndex ?? 0) * (pagination?.pageSize ?? 10) + 1;
+  const pageIndex = (pagination?.pageIndex ?? 1);
+  const pageSize = pagination?.pageSize ?? 10;
+  const from = (pageIndex - 1) * pageSize + 1;
   const to = Math.min(
-    (pagination?.pageIndex ?? 0) * (pagination?.pageSize ?? 10) + (pagination?.pageSize ?? 10),
+    (pageIndex - 1) * pageSize + pageSize,
     pagination?.totalRows ?? 1,
   );
   const total = pagination?.totalRows ?? 1;

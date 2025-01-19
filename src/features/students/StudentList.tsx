@@ -4,7 +4,6 @@ import type { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Student } from '@/api/students';
 import { studentsApi } from '@/api/students';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -12,8 +11,9 @@ import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import type { StudentOverview, StudentStatus } from '@/dao/StudentDAO';
 
-import { useStudentColumns } from './StudentListColumns';
+import { type Student, useStudentColumns } from './StudentListColumns';
 
 // Default values
 const DEFAULT_PAGE_SIZE = 10;
@@ -22,17 +22,17 @@ export function StudentList() {
   const t = useTranslations('Students');
 
   // State
-  const [students, setStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<StudentOverview[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState<string | undefined>();
+  const [status, setStatus] = useState<StudentStatus | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(1);
-  const [sortBy, setSortBy] = useState<keyof Student>('lastName');
+  const [sortBy, setSortBy] = useState<keyof StudentOverview>('lastName');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -45,7 +45,7 @@ export function StudentList() {
       const response = await studentsApi.list(
         { search: searchTerm || undefined, status },
         { page, pageSize },
-        { sortBy, sortOrder },
+        { sortBy: sortBy as keyof StudentOverview, sortOrder },
       );
 
       setStudents(response.data);
@@ -101,7 +101,7 @@ export function StudentList() {
 
   // Sort handler
   const handleSort = useCallback((field: string) => {
-    setSortBy(field as keyof Student);
+    setSortBy(field as keyof StudentOverview);
     setSortOrder(prev => field === sortBy && prev === 'asc' ? 'desc' : 'asc');
   }, [sortBy]);
 
@@ -128,7 +128,7 @@ export function StudentList() {
         />
         <Select
           value={status || 'all'}
-          onValueChange={value => setStatus(value === 'all' ? undefined : value)}
+          onValueChange={value => setStatus(value === 'all' ? undefined : value as StudentStatus)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder={t('all_statuses')} />

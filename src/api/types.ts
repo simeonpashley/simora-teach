@@ -1,12 +1,12 @@
 export type PaginationParams = {
-  page: number;
+  page: number; // one based
   pageSize: number;
 };
 
 export type PaginationResponse = {
   total: number;
   pageSize: number;
-  page: number;
+  page: number; // one based
   totalPages: number;
 };
 

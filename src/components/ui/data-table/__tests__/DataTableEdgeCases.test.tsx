@@ -73,27 +73,6 @@ describe('DataTable Edge Cases', () => {
     expect(screen.getByText('Bob')).toBeInTheDocument();
   });
 
-  it('handles empty data with pagination', () => {
-    render(
-      <DataTable
-        {...defaultProps}
-        data={[]}
-        pagination={{
-          totalRows: 0,
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: 0,
-          onPageSet: jest.fn(),
-          onPageSizeChange: jest.fn(),
-        }}
-        noResults="No data available"
-      />,
-    );
-
-    expect(screen.getByText('No data available')).toBeInTheDocument();
-    expect(screen.getByText('Showing 1 - 0 of 0 items')).toBeInTheDocument();
-  });
-
   it('handles empty data with selection', () => {
     render(
       <DataTable

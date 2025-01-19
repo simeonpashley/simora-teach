@@ -34,7 +34,7 @@ type PaginationButtonsProps = {
 
 /**
  * PaginationButtons component
- * @param pageIndex - zero based current page
+ * @param pageIndex - one based current page
  * @param pageCount - total number of pages
  * @param onPageSet - callback function to set the page index
  */
@@ -46,15 +46,15 @@ export function PaginationButtons({
   return (
     <div data-testid="pagination-buttons" className="flex items-center gap-2">
       <PaginationButton
-        onClick={() => onPageSet(0)}
-        disabled={pageIndex === 0}
+        onClick={() => onPageSet(1)} // set to first page (1-based)
+        disabled={pageIndex === 1} // disable if on first page
         testId="first-page"
       >
         {'<<'}
       </PaginationButton>
       <PaginationButton
-        onClick={() => onPageSet(pageIndex - 1)}
-        disabled={pageIndex === 0}
+        onClick={() => onPageSet(pageIndex - 1)} // decrement page index (1-based)
+        disabled={pageIndex === 1} // disable if on first page
         testId="previous-page"
       >
         {'<'}
@@ -62,22 +62,22 @@ export function PaginationButtons({
       <span className="text-sm">
         Page
         {' '}
-        {pageIndex}
+        {pageIndex /* display current page (1-based) */}
         {' '}
         of
         {' '}
         {pageCount}
       </span>
       <PaginationButton
-        onClick={() => onPageSet(pageIndex + 1)}
-        disabled={pageIndex === pageCount - 1}
+        onClick={() => onPageSet(pageIndex + 1)} // increment page index (1-based)
+        disabled={pageIndex === pageCount} // disable if on last page
         testId="next-page"
       >
         {'>'}
       </PaginationButton>
       <PaginationButton
-        onClick={() => onPageSet(pageCount)}
-        disabled={pageIndex === pageCount - 1}
+        onClick={() => onPageSet(pageCount)} // set to last page (1-based)
+        disabled={pageIndex === pageCount} // disable if on last page
         testId="last-page"
       >
         {'>>'}

@@ -4,14 +4,24 @@ import { db } from '@/libs/DB';
 import { studentOverviewSchema } from '@/models/Schema';
 
 export type SortOrder = 'asc' | 'desc';
+export type StudentStatus = 'active' | 'inactive' | 'pending';
 
+export type StudentOverview = typeof studentOverviewSchema.$inferSelect;
+
+/**
+ * StudentFilters type
+ * search - search term
+ * status - status of the student (active, inactive, pending)
+ *
+ * @description Filters for student data
+ */
 export type StudentFilters = {
   search?: string;
-  status?: string;
+  status?: StudentStatus;
 };
 
 export type PaginationParams = {
-  page: number;
+  page: number; // one based
   pageSize: number;
 };
 
@@ -20,7 +30,23 @@ export type SortParams = {
   sortOrder: SortOrder;
 };
 
+/**
+ * StudentDAO class
+ * @description Data Access Object for student data
+ */
 export class StudentDAO {
+  /**
+   * Find all students
+   * @param filters - filters to apply to the query
+   * @param pagination - pagination parameters
+   * @param sort - sort parameters
+   * @returns an object containing the students and pagination information
+   * {
+          data: StudentOverview[];
+          pagination?: Pagination;
+      }
+   *
+   */
   async findAll(
     filters: StudentFilters = {},
     pagination?: PaginationParams,
@@ -73,8 +99,8 @@ export class StudentDAO {
         ? {
             total: Number(totalCount),
             pageSize: pagination.pageSize,
-            page: pagination.page,
-            totalPages: Math.ceil(Number(totalCount) / pagination.pageSize),
+            page: pagination.page, // one based
+            totalPages: Math.ceil(Number(totalCount) / pagination.pageSize), // one based
           }
         : undefined,
     };

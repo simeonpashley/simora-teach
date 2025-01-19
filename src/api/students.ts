@@ -1,13 +1,10 @@
-import type { StudentFilters } from '@/dao/StudentDAO';
-import type { studentOverviewSchema } from '@/models/Schema';
+import type { StudentFilters, StudentOverview } from '@/dao/StudentDAO';
 
 import { BaseApiClient } from './base';
 import type { PaginationParams } from './types';
 
-export type Student = typeof studentOverviewSchema.$inferSelect;
-
 export type StudentSortParams = {
-  sortBy: keyof Student;
+  sortBy: keyof StudentOverview;
   sortOrder: 'asc' | 'desc';
 };
 
@@ -22,7 +19,7 @@ export class StudentsApi extends BaseApiClient {
     sort?: StudentSortParams,
   ) {
     try {
-      return await this.request<Student[]>('', {
+      return await this.request<StudentOverview[]>('', {
         params: {
           ...filters,
           ...pagination,
@@ -41,18 +38,18 @@ export class StudentsApi extends BaseApiClient {
   }
 
   async get(id: number) {
-    return await this.request<Student>(`/${id}`);
+    return await this.request<StudentOverview>(`/${id}`);
   }
 
-  async create(student: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) {
-    return await this.request<Student>('', {
+  async create(student: Omit<StudentOverview, 'id' | 'createdAt' | 'updatedAt'>) {
+    return await this.request<StudentOverview>('', {
       method: 'POST',
       body: student,
     });
   }
 
-  async update(id: number, student: Partial<Omit<Student, 'id' | 'createdAt' | 'updatedAt'>>) {
-    return await this.request<Student>(`/${id}`, {
+  async update(id: number, student: Partial<Omit<StudentOverview, 'id' | 'createdAt' | 'updatedAt'>>) {
+    return await this.request<StudentOverview>(`/${id}`, {
       method: 'PATCH',
       body: student,
     });

@@ -12,7 +12,7 @@ describe('DataTable Pagination', () => {
 
   const paginationProps = {
     totalRows: 15,
-    pageIndex: 0,
+    pageIndex: 1, // one based
     pageSize: 10,
     pageCount: 2,
     onPageSet: jest.fn(),
@@ -46,7 +46,7 @@ describe('DataTable Pagination', () => {
     const nextButton = screen.getByTestId('next-page');
     await userEvent.click(nextButton);
 
-    expect(paginationProps.onPageSet).toHaveBeenCalledWith(1);
+    expect(paginationProps.onPageSet).toHaveBeenCalledWith(2); // changed from 1 to 2 (1-based)
   });
 
   it.skip('calls onPageSizeChange when rows per page is changed', async () => {
@@ -71,7 +71,7 @@ describe('DataTable Pagination', () => {
     render(
       <DataTable
         {...defaultProps}
-        pagination={{ ...paginationProps, pageIndex: 0 }}
+        pagination={{ ...paginationProps, pageIndex: 1 }} // changed from 0 to 1
       />,
     );
 
@@ -85,7 +85,7 @@ describe('DataTable Pagination', () => {
     render(
       <DataTable
         {...defaultProps}
-        pagination={{ ...paginationProps, pageIndex: 1 }}
+        pagination={{ ...paginationProps, pageIndex: 2 }} // changed from 1 to 2
       />,
     );
 
@@ -101,7 +101,7 @@ describe('DataTable Pagination', () => {
         {...defaultProps}
         pagination={{
           ...paginationProps,
-          pageIndex: 1,
+          pageIndex: 2, // changed from 1 to 2
           pageSize: 5,
           totalRows: 12,
         }}
@@ -117,7 +117,7 @@ describe('DataTable Pagination', () => {
         {...defaultProps}
         pagination={{
           ...paginationProps,
-          pageIndex: 2,
+          pageIndex: 3, // changed from 2 to 3
           pageSize: 5,
           totalRows: 12,
         }}
