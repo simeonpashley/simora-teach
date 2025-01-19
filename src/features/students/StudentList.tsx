@@ -1,5 +1,6 @@
 'use client';
 
+import type { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -33,6 +34,7 @@ export function StudentList() {
   const [total, setTotal] = useState(1);
   const [sortBy, setSortBy] = useState<keyof Student>('lastName');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   // Fetch data
   const fetchStudents = useCallback(async () => {
@@ -168,16 +170,27 @@ export function StudentList() {
             <DataTable<Student, unknown>
               data={students}
               columns={columns}
-              pagination={{ totalRows: total, pageIndex: page, pageSize, pageCount: totalPages, onPageSet: (index) => {
-                setPage(index);
-              }, onPageSizeChange: (size) => {
-                setPageSize(size);
-                setPage(1);
-              } }}
+              pagination={{
+                totalRows: total,
+                pageIndex: page,
+                pageSize,
+                pageCount: totalPages,
+                onPageSet: (index) => {
+                  setPage(index);
+                },
+                onPageSizeChange: (size) => {
+                  setPageSize(size);
+                  setPage(1);
+                },
+              }}
               sorting={{
                 sortBy,
                 sortOrder,
                 onSort: handleSort,
+              }}
+              filtering={{
+                columnFilters,
+                onColumnFiltersChange: setColumnFilters,
               }}
             />
           )}

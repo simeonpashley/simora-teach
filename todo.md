@@ -1,6 +1,6 @@
-## **Dashboard Features and Screens with Testing**
+# **Dashboard Features and Screens with Testing**
 
-### **1. Hub Screen**
+## **1. Hub Screen**
 
 ### Stage 1: Basic Setup
 
@@ -48,24 +48,26 @@
 
 ---
 
-### **2. Students Management Screen**
+## **2. Students Management Screen**
+
+Table package: @tanstack/react-table https://tanstack.com/table/latest/docs/introduction
 
 ### Stage 1: Basic Setup
 
 [x] Create a dashboard page at `dashboard/students` that uses the existing layout.
 [x] Use the Table component to display the students' list with columns: Checkbox, ID, Name, and an Edit icon.
 [x] Use the Table component and ensure support for dynamic data loading.
-[ ] Write unit tests to verify:
-   [ ] Data is fetched and displayed correctly.
-   [ ] Table renders without errors for different data sets (e.g., empty list, large dataset).
-[ ] Ensure all tests pass before proceeding.
+[x] Write unit tests to verify:
+   [x] Data is fetched and displayed correctly.
+   [x] Table renders without errors for different data sets (e.g., empty list, large dataset).
+[x] Ensure all tests pass before proceeding.
 
 ### Stage 2: Advanced Table Features
 
-[ ] Add sorting functionality for columns like ID and Name.
-[ ] Implement filtering to allow filtering students by `status`.
-[ ] Add search functionality to search for students by name.
-[ ] Implement pagination to limit the number of rows displayed at a time.
+[x] Add search functionality to search for students by name.
+[x] Add sorting functionality for columns like ID and Name.
+[x] Implement pagination to limit the number of rows displayed at a time.
+[x] Implement filtering to allow filtering students by `status`.
 [ ] Write unit tests to verify:
    [ ] Sorting, filtering, and search functionalities work as expected.
    [ ] Pagination works correctly, including edge cases (e.g., last page, empty results).
@@ -73,8 +75,8 @@
 
 ### Stage 3: Actions for Selected Rows
 
-[ ] Add row-level checkboxes and a "Select All" checkbox in the header.
-[ ] Display a row above the table with actions for selected rows.
+[x] Add row-level checkboxes and a "Select All" checkbox in the header.
+[x] Display a row above the table with actions for selected rows.
 [ ] Implement the Delete action for selected rows with confirmation before proceeding.
 [ ] Add an Export action to export selected rows as a CSV file.
 [ ] Write unit tests to verify:
@@ -102,7 +104,7 @@
    [ ] Table updates after adding a new student.
 [ ] Ensure all tests pass before marking this feature as complete.
 
-### **3. Communication Log Screen**
+## **3. Communication Log Screen**
 
 ### Stage 1: Basic Setup
 
@@ -144,7 +146,7 @@
    [ ] Confirmation modal works as expected.
 [ ] Ensure all tests pass before marking this feature as complete.
 
-### **4. Weekly Planning Screen**
+## **4. Weekly Planning Screen**
 
 ### Stage 1: Basic Setup
 
@@ -182,7 +184,7 @@
 
 ---
 
-### **5. Termly Planning Screen**
+## **5. Termly Planning Screen**
 
 ### Stage 1: Basic Setup
 
@@ -219,7 +221,7 @@
 
 ---
 
-### **6. Subject Overviews (Maths, Reading, Writing)**
+## **6. Subject Overviews (Maths, Reading, Writing)**
 
 ### Stage 1: Basic Setup
 
@@ -265,7 +267,7 @@
 
 ---
 
-### **7. Data Trackers**
+## **7. Data Trackers**
 
 #### **General Functionality for Data Trackers**
 

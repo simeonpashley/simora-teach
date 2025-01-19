@@ -37,6 +37,7 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
       ),
       enableSorting: false,
       enableHiding: false,
+      enableColumnFilter: false,
     },
     {
       accessorKey: 'id',
@@ -45,6 +46,7 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
           ID
         </SortButton>
       ),
+      enableColumnFilter: false,
     },
     {
       accessorKey: 'firstName',
@@ -53,6 +55,9 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
           {t('first_name')}
         </SortButton>
       ),
+      meta: {
+        filterVariant: 'text',
+      },
     },
     {
       accessorKey: 'lastName',
@@ -61,6 +66,9 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
           {t('last_name')}
         </SortButton>
       ),
+      meta: {
+        filterVariant: 'text',
+      },
     },
     {
       accessorKey: 'dateOfBirth',
@@ -79,6 +87,7 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
             })
           : '-';
       },
+      enableColumnFilter: false,
     },
     {
       accessorKey: 'enrollmentDate',
@@ -97,6 +106,7 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
             })
           : '-';
       },
+      enableColumnFilter: false,
     },
     {
       accessorKey: 'status',
@@ -119,10 +129,12 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
                     : 'bg-gray-100 text-gray-800'
             }`}
           >
-
             <>{t(`status_${status?.toLowerCase() || 'unknown'}`)}</>
           </span>
         );
+      },
+      meta: {
+        filterVariant: 'select',
       },
     },
     {
@@ -138,6 +150,8 @@ export function useStudentColumns(students: Student[], selectedIds: number[], to
           <span className="sr-only">{t('edit')}</span>
         </Button>
       ),
+      enableSorting: false,
+      enableColumnFilter: false,
     },
   ];
 }

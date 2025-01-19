@@ -2,8 +2,14 @@
 
 import {
   type ColumnDef,
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues as getFacetedMinMaxValuesFromTable,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  type OnChangeFn,
   type PaginationState,
   type SortingState,
   useReactTable,
@@ -27,6 +33,7 @@ import {
 import { cn } from '@/lib/utils';
 
 import { PaginationButtons } from './PaginationButtons';
+import { TableFilter } from './table-filter';
 
 type DataTableProps<TData, TValue> = {
   data: TData[];
@@ -44,6 +51,10 @@ type DataTableProps<TData, TValue> = {
     sortBy: string;
     sortOrder: 'asc' | 'desc';
     onSort: (field: string) => void;
+  };
+  filtering?: {
+    columnFilters: ColumnFiltersState;
+    onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
   };
   noResults?: string;
   className?: string;
@@ -73,6 +84,7 @@ export function DataTable<TData, TValue>({
   columns,
   pagination,
   sorting,
+  filtering,
   noResults = 'No results found.',
   className,
 }: DataTableProps<TData, TValue>) {
@@ -80,11 +92,16 @@ export function DataTable<TData, TValue>({
     data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValuesFromTable(),
     manualPagination: true,
     pageCount: pagination?.pageCount ?? -1,
     state: {
       pagination: convertPaginationState(pagination),
       sorting: convertSortingState(sorting),
+      columnFilters: filtering?.columnFilters ?? [],
     },
     manualSorting: true,
     enableSorting: true,
@@ -97,6 +114,7 @@ export function DataTable<TData, TValue>({
         }
       }
     },
+    onColumnFiltersChange: filtering?.onColumnFiltersChange,
   });
 
   const { rows } = table.getRowModel();
@@ -138,15 +156,27 @@ export function DataTable<TData, TValue>({
                         sorting.onSort(id);
                       }}
                     >
-                      <div className="flex items-center gap-2">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {canSort && (
-                          <span className="text-xs">
-                            {sortDirection === 'asc' ? '↑' : sortDirection === 'desc' ? '↓' : ''}
-                          </span>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          {canSort && (
+                            <span className="text-xs">
+                              {sortDirection === 'asc' ? '↑' : sortDirection === 'desc' ? '↓' : ''}
+                            </span>
+                          )}
+                        </div>
+                        {header.column.getCanFilter() && filtering && (
+                          <button
+                            type="button"
+                            onClick={e => e.stopPropagation()}
+                            onKeyDown={e => e.stopPropagation()}
+                            className="flex w-full"
+                          >
+                            <TableFilter column={header.column} />
+                          </button>
                         )}
                       </div>
                     </TableHead>
@@ -190,6 +220,7 @@ export function DataTable<TData, TValue>({
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Rows per page</span>
             <Select
+              data-testid="rows-per-page-select"
               value={String(pagination.pageSize)}
               onValueChange={value => pagination.onPageSizeChange(Number(value))}
             >

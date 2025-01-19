@@ -4,6 +4,7 @@
 - use NextJS Link component for navigation where possible.
 - when making changes, the comments should be absolute not relative. BAD: "// fixed undefined" GOOD: "// set default value"
 - Reuse, extend or create reusable components where appropriate and use them in the project. UI: `src/components/ui`
+- Use table package @tanstack/react-table by default
 - "Simora" is the name of the company. "Simora Teach", "@simora/teach" is the internal & technical name of the project.
 - "Rose" or "Rose by Simora" is the public facing name of the product.
 </general_guidelines>

@@ -1,7 +1,8 @@
 'use server';
 
-import type { Student, StudentFilters, StudentSortParams } from '@/api/students';
+import type { Student, StudentSortParams } from '@/api/students';
 import type { PaginationParams } from '@/api/types';
+import type { StudentFilters } from '@/dao/StudentDAO';
 import { studentService } from '@/services/StudentService';
 
 export type GetStudentsResponse = {
