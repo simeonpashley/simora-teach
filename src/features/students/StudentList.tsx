@@ -1,6 +1,5 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 
 import type { Student } from '@/api/students';
@@ -8,9 +7,11 @@ import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { useStudents } from '@/contexts/useStudents';
+
+import { useStudentColumns } from './StudentListColumns';
 
 export function StudentList() {
   const t = useTranslations('Students');
@@ -30,37 +31,7 @@ export function StudentList() {
     deleteSelected,
   } = useStudents();
 
-  const columns: ColumnDef<Student, unknown>[] = [
-    {
-      id: 'select',
-      header: () => (
-        <input
-          type="checkbox"
-          checked={students?.length > 0 && selectedIds.length === students.length}
-          onChange={toggleAllSelection}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={selectedIds.includes(row.original.id)}
-          onChange={() => toggleSelection(row.original.id)}
-        />
-      ),
-    },
-    {
-      accessorKey: 'firstName',
-      header: t('first_name'),
-    },
-    {
-      accessorKey: 'lastName',
-      header: t('last_name'),
-    },
-    {
-      accessorKey: 'status',
-      header: t('status'),
-    },
-  ];
+  const columns = useStudentColumns(students, selectedIds, toggleSelection, toggleAllSelection);
 
   if (error) {
     return (
@@ -81,15 +52,22 @@ export function StudentList() {
           className="max-w-sm"
         />
         <Select
-          value={filters.status ?? ''}
-          onValueChange={value => setFilters({ ...filters, status: value })}
+          value={filters.status || 'all'}
+          onValueChange={value => setFilters({ ...filters, status: value === 'all' ? undefined : value })}
         >
-          <option value="">{t('all_statuses')}</option>
-          <option value="active">{t('status_active')}</option>
-          <option value="inactive">{t('status_inactive')}</option>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder={t('all_statuses')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">{t('all_statuses')}</SelectItem>
+              <SelectItem value="active">{t('status_active')}</SelectItem>
+              <SelectItem value="inactive">{t('status_inactive')}</SelectItem>
+              <SelectItem value="pending">{t('status_pending')}</SelectItem>
+            </SelectGroup>
+          </SelectContent>
         </Select>
       </div>
-
       {/* Selected Actions */}
       {selectedIds.length > 0 && (
         <div className="flex items-center gap-4 rounded bg-muted/50 p-2">

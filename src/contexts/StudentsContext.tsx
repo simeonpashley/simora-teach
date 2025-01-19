@@ -18,9 +18,12 @@ import { defaultPagination, defaultSort } from './students-context-types';
 
 export const StudentsContext = createContext<StudentsContextType | null>(null);
 
+const debugOutput = false;
 // Debug helper
 const debug = (area: string, message: string, data?: unknown) => {
-  console.log(`[StudentsContext:${area}]`, message, data ? JSON.stringify(data, null, 2) : '');
+  if (debugOutput) {
+    console.log(`[StudentsContext:${area}]`, message, data ? JSON.stringify(data, null, 2) : '');
+  }
 };
 
 export function StudentsProvider({ children }: PropsWithChildren) {

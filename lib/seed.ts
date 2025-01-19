@@ -162,14 +162,15 @@ async function seed() {
       throw new Error('Failed to insert hubs');
     }
 
-    // Generate 10 students
-    console.log('Seeding students...');
-    const studentData = Array.from({ length: 100 }, () => ({
+    // Generate 100 students
+    const studentCount = 100;
+    console.log(`Seeding ${studentCount} students...`);
+    const studentData = Array.from({ length: studentCount }, () => ({
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       dateOfBirth: randomDate(new Date('2013-09-01'), new Date('2014-08-31')),
       enrollmentDate: new Date('2024-09-03'),
-      status: faker.helpers.arrayElement(['Active', 'Inactive', 'Pending']) as 'Active' | 'Inactive' | 'Pending',
+      status: faker.helpers.arrayElement(['active', 'inactive', 'pending']) as 'active' | 'inactive' | 'iending',
     }));
 
     const students = await db.insert(studentOverviewSchema)

@@ -16,20 +16,19 @@ type Student = {
   status: string | null;
 };
 
-export function useStudentColumns(): ColumnDef<Student>[] {
-  const t = useTranslations('StudentList');
+export function useStudentColumns(students: Student[], selectedIds: number[], toggleSelection: (id: number) => void, toggleAllSelection: () => void): ColumnDef<Student>[] {
+  const t = useTranslations('Students');
   const locale = useLocale();
 
   return [
     {
       id: 'select',
-      header: ({ table }) => (
+      header: () => (
         <div className="px-1">
           <input
             type="checkbox"
-            checked={table.getIsAllPageRowsSelected()}
-            onChange={e => table.toggleAllPageRowsSelected(!!e.target.checked)}
-            aria-label={t('select_all')}
+            checked={students?.length > 0 && selectedIds.length === students.length}
+            onChange={toggleAllSelection}
             className="size-4 rounded border-gray-300"
           />
         </div>
@@ -38,9 +37,8 @@ export function useStudentColumns(): ColumnDef<Student>[] {
         <div className="px-1">
           <input
             type="checkbox"
-            checked={row.getIsSelected()}
-            onChange={e => row.toggleSelected(!!e.target.checked)}
-            aria-label={t('select_row')}
+            checked={selectedIds.includes(row.original.id)}
+            onChange={() => toggleSelection(row.original.id)}
             className="size-4 rounded border-gray-300"
           />
         </div>
@@ -60,7 +58,7 @@ export function useStudentColumns(): ColumnDef<Student>[] {
       accessorKey: 'firstName',
       header: ({ column }) => (
         <SortButton onClick={() => column.toggleSorting()}>
-          {t('columns.first_name')}
+          {t('first_name')}
         </SortButton>
       ),
     },
@@ -68,7 +66,7 @@ export function useStudentColumns(): ColumnDef<Student>[] {
       accessorKey: 'lastName',
       header: ({ column }) => (
         <SortButton onClick={() => column.toggleSorting()}>
-          {t('columns.last_name')}
+          {t('last_name')}
         </SortButton>
       ),
     },
@@ -76,7 +74,7 @@ export function useStudentColumns(): ColumnDef<Student>[] {
       accessorKey: 'dateOfBirth',
       header: ({ column }) => (
         <SortButton onClick={() => column.toggleSorting()}>
-          {t('columns.date_of_birth')}
+          {t('date_of_birth')}
         </SortButton>
       ),
       cell: ({ row }) => {
@@ -94,7 +92,7 @@ export function useStudentColumns(): ColumnDef<Student>[] {
       accessorKey: 'enrollmentDate',
       header: ({ column }) => (
         <SortButton onClick={() => column.toggleSorting()}>
-          {t('columns.enrollment_date')}
+          {t('enrollment_date')}
         </SortButton>
       ),
       cell: ({ row }) => {
@@ -112,7 +110,7 @@ export function useStudentColumns(): ColumnDef<Student>[] {
       accessorKey: 'status',
       header: ({ column }) => (
         <SortButton onClick={() => column.toggleSorting()}>
-          {t('columns.status')}
+          {t('status')}
         </SortButton>
       ),
       cell: ({ row }) => {
@@ -120,21 +118,24 @@ export function useStudentColumns(): ColumnDef<Student>[] {
         return (
           <span
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              status === 'Active'
+              status === 'active'
                 ? 'bg-green-100 text-green-800'
-                : status === 'Inactive'
+                : status === 'inactive'
                   ? 'bg-red-100 text-red-800'
-                  : 'bg-yellow-100 text-yellow-800'
+                  : status === 'pending'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800'
             }`}
           >
-            {status || 'Unknown'}
+
+            <>{t(`status_${status?.toLowerCase() || 'unknown'}`)}</>
           </span>
         );
       },
     },
     {
       id: 'actions',
-      header: t('columns.actions'),
+      header: t('actions'),
       cell: ({ row }) => (
         <Button
           variant="ghost"
