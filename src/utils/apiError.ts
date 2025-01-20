@@ -1,3 +1,5 @@
+import type { ApiErrorResponse } from '@/types/ApiResponse';
+
 type ErrorType =
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
@@ -48,7 +50,7 @@ export class ApiError extends Error {
   }
 
   toResponse() {
-    const response = {
+    const response: ApiErrorResponse = {
       error: this.message,
       ...(process.env.NODE_ENV === 'development' && this.details
         ? { details: this.details }

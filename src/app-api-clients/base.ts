@@ -1,5 +1,3 @@
-import { cookies } from 'next/headers';
-
 import type { ApiErrorResponse, ApiResponse } from './types';
 
 export type RequestOptions = {
@@ -49,31 +47,13 @@ export abstract class BaseApiClient {
       });
     }
 
-    // Prepare request options with different headers for client/server
+    // Prepare request options
     const requestOptions: RequestInit = {
       method,
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         'Accept': '*/*',
-        ...(typeof window === 'undefined'
-          ? {
-              // Server-side: Forward cookies from the incoming request
-              Cookie: cookies().getAll()
-                .map(cookie => `${cookie.name}=${cookie.value}`)
-                .join('; '),
-            }
-          : {
-              // Client-side: Set required Clerk headers
-              'Host': '127.0.0.1:3000',
-              'Origin': apiUrl,
-              'Referer': apiUrl,
-              'Sec-Fetch-Dest': 'empty',
-              'User-Agent': 'node',
-              'X-Forwarded-Host': '127.0.0.1:3000',
-              'X-Forwarded-Proto': 'http',
-            }
-        ),
         ...headers,
       },
     };

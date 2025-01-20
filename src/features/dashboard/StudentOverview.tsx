@@ -16,6 +16,12 @@ export function StudentOverview({ metrics }: StudentOverviewProps) {
   const activePercentage = Math.round(
     (metrics.activeStudents / metrics.total) * 100,
   );
+  const perc = (value: number, total: number) => {
+    if (!total) {
+      return 0;
+    }
+    return Math.round((value / total) * 100);
+  };
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -27,16 +33,12 @@ export function StudentOverview({ metrics }: StudentOverviewProps) {
       <MetricCard
         title="SEN Students"
         value={metrics.senStudents}
-        description={`${Math.round(
-          (metrics.senStudents / metrics.total) * 100,
-        )}% of total students`}
+        description={`${perc(metrics.senStudents, metrics.total)}% of total students`}
       />
       <MetricCard
         title="EYFS Students"
         value={metrics.eyfsStudents}
-        description={`${Math.round(
-          (metrics.eyfsStudents / metrics.total) * 100,
-        )}% of total students`}
+        description={`${perc(metrics.eyfsStudents, metrics.total)}% of total students`}
       />
       <MetricCard
         title="Student Status"

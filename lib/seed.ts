@@ -97,12 +97,13 @@ async function seed() {
 
     console.log('Tables truncated.');
 
+    // Map to existing organization
     const clerkId = 'org_2rm1qb49cFwGSTzgCKf3hYBFdx4';
     // Seed Organizations
     const organization = await db
       .insert(organizationSchema)
       .values({
-        clerkId,
+        id: clerkId,
         stripeCustomerId: faker.string.uuid(),
         stripeSubscriptionId: faker.string.uuid(),
         stripeSubscriptionPriceId: faker.string.uuid(),
@@ -121,7 +122,8 @@ async function seed() {
           lastName: faker.person.lastName(),
           dateOfBirth: randomDate(new Date('2010-01-01'), new Date('2015-12-31')),
           enrollmentDate: randomDate(new Date('2020-01-01'), new Date('2023-01-01')),
-          status: faker.helpers.arrayElement(['active', 'inactive']),
+          status: faker.helpers.arrayElement(['Active', 'Inactive', 'EYFS']),
+          senStatus: faker.helpers.arrayElement(['SEN Support', null, null]), // 1/3 chance of being SEN
         })),
       )
       .returning({ id: studentSchema.id });
@@ -144,13 +146,28 @@ async function seed() {
         goalName: faker.lorem.words(5),
         description: faker.lorem.paragraph(),
         progress: faker.number.int({ min: 0, max: 100 }),
-        status: faker.helpers.arrayElement(['In Progress', 'Completed']),
+        status: faker.helpers.arrayElement(['in_progress', 'completed']),
         evidence: faker.helpers.arrayElement([faker.internet.url(), faker.lorem.sentence()]),
         dueDate: randomDate(new Date('2024-09-01'), new Date('2025-07-23')),
         startDate: randomDate(new Date('2024-01-01'), new Date('2024-08-31')),
       }));
 
       await db.insert(iepSchema).values(iepGoals);
+    }
+
+    // Seed Milestone Trackers
+    for (const studentId of studentIds) {
+      const milestones = Array.from({ length: 5 }, () => ({
+        studentId,
+        milestoneName: faker.lorem.words(3),
+        milestoneCategory: faker.helpers.arrayElement(['Academic', 'Social', 'Physical']),
+        status: faker.helpers.arrayElement(['Emerging', 'Secure']),
+        expectedCompletionDate: randomDate(new Date('2024-09-01'), new Date('2025-07-23')),
+        severity: faker.helpers.arrayElement(['High', 'Medium', 'Low']),
+        evidence: faker.lorem.sentence(),
+      }));
+
+      await db.insert(milestoneTrackerSchema).values(milestones);
     }
 
     // Seed Termly and Weekly Planning

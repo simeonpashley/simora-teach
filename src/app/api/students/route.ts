@@ -5,6 +5,7 @@ import { z } from 'zod';
 import type { StudentStatus } from '@/dao/StudentDAO';
 import type { studentSchema } from '@/models/Schema';
 import { studentService } from '@/services/StudentService';
+import type { ApiResponse } from '@/types/ApiResponse';
 import { ApiError } from '@/utils/apiError';
 
 const validSortColumns = [
@@ -59,7 +60,11 @@ export async function GET(request: NextRequest) {
       : undefined;
 
     const result = await studentService.getStudents(filters, pagination, sort);
-    return Response.json(result);
+    const response: ApiResponse<typeof result.data> = {
+      data: result.data,
+      ...(result.pagination && { pagination: result.pagination }),
+    };
+    return Response.json(response);
   } catch (error) {
     console.error('Error fetching students:', error);
 
@@ -84,7 +89,8 @@ export async function DELETE(request: NextRequest) {
     }).parse(body);
 
     await studentService.deleteStudents(ids);
-    return Response.json({ success: true });
+    const response: ApiResponse<{ success: true }> = { data: { success: true } };
+    return Response.json(response);
   } catch (error) {
     console.error('Error deleting students:', error);
 

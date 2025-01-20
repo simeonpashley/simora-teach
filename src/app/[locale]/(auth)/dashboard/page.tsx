@@ -1,22 +1,18 @@
-import { auth } from '@clerk/nextjs/server';
-import { AlertCircle } from 'lucide-react';
-import { redirect } from 'next/navigation';
+'use client';
 
+import { useAuth } from '@clerk/nextjs';
+import { AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import type { DashboardMetrics } from '@/app-api-clients/dashboard';
 import { dashboardApiClient } from '@/app-api-clients/dashboard';
+import type { ApiResponse } from '@/app-api-clients/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { IEPOverview } from '@/features/dashboard/IEPOverview';
 import { MilestoneOverview } from '@/features/dashboard/MilestoneOverview';
 import { StudentOverview } from '@/features/dashboard/StudentOverview';
-
-async function getDashboardMetrics(_organizationId: string) {
-  try {
-    return await dashboardApiClient.getDashboardMetrics();
-  } catch (error) {
-    console.error('Error fetching dashboard metrics:', error);
-    throw error;
-  }
-}
 
 function DashboardSkeleton() {
   return (
@@ -98,21 +94,40 @@ function ErrorAlert({ error }: { error: Error }) {
   );
 }
 
-export default async function DashboardPage() {
-  const { orgId } = auth();
+export default function DashboardPage() {
+  const clerkAuth = useAuth();
+  const router = useRouter();
+  const [metrics, setMetrics] = useState<ApiResponse<DashboardMetrics> | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!orgId) {
-    redirect('/select-org');
-  }
+  useEffect(() => {
+    if (!clerkAuth.isLoaded) {
+      return;
+    }
 
-  let metrics;
-  let error;
+    if (!clerkAuth.orgId) {
+      // router.push('/select-org');
+      return;
+    }
 
-  try {
-    metrics = await getDashboardMetrics(orgId);
-  } catch (e) {
-    error = e as Error;
-  }
+    const fetchMetrics = async () => {
+      try {
+        setIsLoading(true);
+        const data = await dashboardApiClient.getDashboardMetrics(clerkAuth.orgId);
+        setMetrics(data);
+        setError(null);
+      } catch (e) {
+        console.error('Error fetching dashboard metrics:', e);
+        setError(e as Error);
+        setMetrics(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, [clerkAuth.orgId, clerkAuth.isLoaded, router]);
 
   return (
     <div className="container space-y-8 py-8">
@@ -127,43 +142,43 @@ export default async function DashboardPage() {
         ? (
             <ErrorAlert error={error} />
           )
-        : !metrics
-            ? (
-                <DashboardSkeleton />
-              )
-            : (
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-medium">Student Overview</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Key metrics about your student population
-                      </p>
-                    </div>
-                    <StudentOverview metrics={metrics.students} />
+        : isLoading || !metrics
+          ? (
+              <DashboardSkeleton />
+            )
+          : (
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium">Student Overview</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Key metrics about your student population
+                    </p>
                   </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-medium">Milestone Tracking</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Progress on student milestones and achievements
-                      </p>
-                    </div>
-                    <MilestoneOverview metrics={metrics.milestones} />
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-medium">IEP Management</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Individual Education Plan progress and reviews
-                      </p>
-                    </div>
-                    <IEPOverview metrics={metrics.ieps} />
-                  </div>
+                  <StudentOverview metrics={metrics.data.students} />
                 </div>
-              )}
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium">Milestone Tracking</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Progress on student milestones and achievements
+                    </p>
+                  </div>
+                  <MilestoneOverview metrics={metrics.data.milestones} />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium">IEP Management</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Individual Education Plan progress and reviews
+                    </p>
+                  </div>
+                  <IEPOverview metrics={metrics.data.ieps} />
+                </div>
+              </div>
+            )}
     </div>
   );
 }

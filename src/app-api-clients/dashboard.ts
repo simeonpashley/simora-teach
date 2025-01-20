@@ -18,6 +18,16 @@ export type DashboardMetrics = {
     upcomingReviews: number;
     completedGoals: number;
   };
+  weeklyPlanning: {
+    activitiesThisWeek: number;
+    termlyProgress: number;
+    missedActivities: number;
+  };
+  communications: {
+    recentCount: number;
+    followUpsDue: number;
+    parentEngagement: number;
+  };
 };
 
 export class DashboardApiClient extends BaseApiClient {
@@ -25,9 +35,11 @@ export class DashboardApiClient extends BaseApiClient {
     super('/api/dashboard/metrics');
   }
 
-  async getDashboardMetrics(): Promise<DashboardMetrics> {
-    const response = await this.request<DashboardMetrics>('');
-    return response.data;
+  async getDashboardMetrics(organizationId: string) {
+    const response = await this.request<DashboardMetrics>('', {
+      params: { organizationId },
+    });
+    return response;
   }
 }
 
