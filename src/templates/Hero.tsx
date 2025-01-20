@@ -1,4 +1,4 @@
-import { GitHubLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { TwitterLogoIcon } from '@radix-ui/react-icons';
 import { useTranslations } from 'next-intl';
 
 import { badgeVariants } from '@/components/ui/badgeVariants';
@@ -15,7 +15,7 @@ export const Hero = () => {
         banner={(
           <a
             className={badgeVariants()}
-            href="https://twitter.com/simora_uk"
+            href="https://x.com/simora_uk"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -33,22 +33,12 @@ export const Hero = () => {
         })}
         description={t('description')}
         buttons={(
-          <>
-            <a
-              className={buttonVariants({ size: 'lg' })}
-              href="https://github.com/simora-uk"
-            >
-              {t('primary_button')}
-            </a>
-
-            <a
-              className={buttonVariants({ variant: 'outline', size: 'lg' })}
-              href="https://github.com/simora-uk"
-            >
-              <GitHubLogoIcon className="mr-2 size-5" />
-              {t('secondary_button')}
-            </a>
-          </>
+          <a
+            className={buttonVariants({ size: 'lg' })}
+            href="https://github.com/simora-uk"
+          >
+            {t('primary_button')}
+          </a>
         )}
       />
     </Section>
