@@ -1,5 +1,7 @@
 import '@/styles/global.css';
 
+import { enUS } from '@clerk/localizations';
+import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 
@@ -42,7 +44,12 @@ export default async function RootLayout(props: {
   // Using internationalization in Client Components
   // TODO: Add Common/Global non-language messages for other, e.g., brand name, year, author.
   const messages = await getMessages((await props.params).locale);
+  const signInUrl = '/sign-in';
+  const signUpUrl = '/sign-up';
+  const dashboardUrl = '/dashboard';
+  const afterSignOutUrl = '/';
 
+  const clerkLocale = enUS;
   // The `suppressHydrationWarning` in <html> is used to prevent hydration errors caused by `next-themes`.
   // Solution provided by the package itself: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
 
@@ -57,7 +64,18 @@ export default async function RootLayout(props: {
             messages={messages}
             timeZone="UTC"
           >
-            {props.children}
+            <ClerkProvider
+              // PRO: Dark mode support for Clerk
+              localization={clerkLocale}
+              signInUrl={signInUrl}
+              signUpUrl={signUpUrl}
+              signInFallbackRedirectUrl={dashboardUrl}
+              signUpFallbackRedirectUrl={dashboardUrl}
+              afterSignOutUrl={afterSignOutUrl}
+              dynamic
+            >
+              {props.children}
+            </ClerkProvider>
           </NextIntlClientProvider>
         </body>
       </html>

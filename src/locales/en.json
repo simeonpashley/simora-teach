@@ -141,7 +141,9 @@
     "community": "Community",
     "company": "Company",
     "sign_in": "Sign In",
-    "sign_up": "Sign Up"
+    "sign_up": "Sign Up",
+    "dashboard": "Dashboard",
+    "sign_out": "Sign Out"
   },
   "Footer": {
     "copyright": "© Copyright {year} {name}. All rights reserved.",
