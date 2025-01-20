@@ -42,9 +42,9 @@
     "meta_description": "Create your Rose by Simora account"
   },
   "Hero": {
-    "follow_twitter": "Follow us on Twitter",
+    "follow_twitter": "Follow us on X",
     "title": "The <important>Ultimate</important> Teacher Assistant",
-    "description": "Streamline your teaching workflow with our comprehensive assistant.",
+    "description": "Reclaim Your Time. Empower Every Student.",
     "primary_button": "Get Started",
     "secondary_button": "View on GitHub"
   },
@@ -131,7 +131,7 @@
   },
   "CTA": {
     "title": "Ready to get started?",
-    "description": "Join thousands of teachers already using Rose to enhance their teaching.",
+    "description": "Join teachers already using Rose to enhance their teaching.",
     "button_text": "View on GitHub"
   },
   "Navbar": {
@@ -145,7 +145,7 @@
   },
   "Footer": {
     "copyright": "© Copyright {year} {name}. All rights reserved.",
-    "designed_by": "Designed by {author}",
+    "designed_by": "Designed by <author></author>",
     "company": "Company",
     "product": "Product",
     "docs": "Documentation",

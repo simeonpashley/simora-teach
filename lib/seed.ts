@@ -25,7 +25,9 @@ import {
   iepSchema,
   milestoneTrackerSchema,
   organizationSchema,
+  SENStatusEnum,
   studentSchema,
+  StudentStatusEnum,
   termlyPlanningSchema,
   weeklyPlanningSchema,
 } from '../src/models/Schema';
@@ -122,8 +124,16 @@ async function seed() {
           lastName: faker.person.lastName(),
           dateOfBirth: randomDate(new Date('2010-01-01'), new Date('2015-12-31')),
           enrollmentDate: randomDate(new Date('2020-01-01'), new Date('2023-01-01')),
-          status: faker.helpers.arrayElement(['Active', 'Inactive', 'EYFS']),
-          senStatus: faker.helpers.arrayElement(['SEN Support', null, null]), // 1/3 chance of being SEN
+          status: faker.helpers.arrayElement([
+            StudentStatusEnum.Active,
+            StudentStatusEnum.Inactive,
+            StudentStatusEnum.EYFS,
+          ]),
+          senStatus: faker.helpers.arrayElement([
+            SENStatusEnum.SENSupport,
+            SENStatusEnum.None,
+            SENStatusEnum.None,
+          ]), // 1/3 chance of being SEN
         })),
       )
       .returning({ id: studentSchema.id });

@@ -1,98 +1,19 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import type { DashboardMetrics } from '@/app-api-clients/dashboard';
 import { dashboardApiClient } from '@/app-api-clients/dashboard';
 import type { ApiResponse } from '@/app-api-clients/types';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ErrorAlert } from '@/components/ui/ErrorAlert';
+import { CommunicationOverview } from '@/features/dashboard/CommunicationOverview';
+import { DashboardSkeleton } from '@/features/dashboard/DashboardSkeleton';
 import { IEPOverview } from '@/features/dashboard/IEPOverview';
 import { MilestoneOverview } from '@/features/dashboard/MilestoneOverview';
 import { StudentOverview } from '@/features/dashboard/StudentOverview';
-
-function DashboardSkeleton() {
-  return (
-    <div className="space-y-8">
-      {/* Student Overview Skeleton */}
-      <div className="space-y-4">
-        <div>
-          <div className="h-8 w-48 rounded-md bg-muted" />
-          <div className="mt-2 h-4 w-96 rounded-md bg-muted" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border bg-card p-6 shadow-sm"
-              data-testid="metric-card-skeleton"
-            >
-              <Skeleton className="h-7 w-[120px]" />
-              <Skeleton className="mt-4 h-10 w-[60px]" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Milestone Overview Skeleton */}
-      <div className="space-y-4">
-        <div>
-          <div className="h-8 w-48 rounded-md bg-muted" />
-          <div className="mt-2 h-4 w-96 rounded-md bg-muted" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border bg-card p-6 shadow-sm"
-              data-testid="metric-card-skeleton"
-            >
-              <Skeleton className="h-7 w-[120px]" />
-              <Skeleton className="mt-4 h-10 w-[60px]" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* IEP Overview Skeleton */}
-      <div className="space-y-4">
-        <div>
-          <div className="h-8 w-48 rounded-md bg-muted" />
-          <div className="mt-2 h-4 w-96 rounded-md bg-muted" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border bg-card p-6 shadow-sm"
-              data-testid="metric-card-skeleton"
-            >
-              <Skeleton className="h-7 w-[120px]" />
-              <Skeleton className="mt-4 h-10 w-[60px]" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ErrorAlert({ error }: { error: Error }) {
-  return (
-    <Alert variant="destructive">
-      <AlertCircle className="size-4" />
-      <AlertTitle>Error</AlertTitle>
-      <AlertDescription>
-        Failed to load dashboard metrics:
-        {' '}
-        {error.message}
-      </AlertDescription>
-    </Alert>
-  );
-}
+import { WeeklyPlanningOverview } from '@/features/dashboard/WeeklyPlanningOverview';
 
 export default function DashboardPage() {
   const clerkAuth = useAuth();
@@ -176,6 +97,26 @@ export default function DashboardPage() {
                     </p>
                   </div>
                   <IEPOverview metrics={metrics.data.ieps} />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium">Weekly Planning</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Overview of weekly activities and termly progress
+                    </p>
+                  </div>
+                  <WeeklyPlanningOverview metrics={metrics.data.weeklyPlanning} />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium">Communication Overview</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Recent communications and parent engagement metrics
+                    </p>
+                  </div>
+                  <CommunicationOverview metrics={metrics.data.communications} />
                 </div>
               </div>
             )}

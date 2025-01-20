@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
 import { CTA } from '@/templates/CTA';
-import { DemoBanner } from '@/templates/DemoBanner';
 import { FAQ } from '@/templates/FAQ';
 import { Features } from '@/templates/Features';
 import { Footer } from '@/templates/Footer';
@@ -24,15 +23,13 @@ export async function generateMetadata(props: { params: { locale: string } }) {
 const IndexPage = () => {
   return (
     <>
-      <h1>Hello</h1>
-      {false ? null : <DemoBanner />}
-      {false ? null : <Navbar />}
-      {false ? null : <Hero />}
-      {false ? null : <Features />}
-      {false ? null : <Pricing />}
-      {false ? null : <FAQ />}
-      {false ? null : <CTA />}
-      {false ? null : <Footer />}
+      <Navbar />
+      <Hero />
+      <Features />
+      <Pricing />
+      <FAQ />
+      <CTA />
+      <Footer />
     </>
   );
 };

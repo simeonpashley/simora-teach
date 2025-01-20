@@ -30,6 +30,38 @@ export const organizationSchema = pgTable('organization', {
 // NO USER TABLE IS NEEDED.
 
 // Student Table
+
+/**
+ * Student Status
+ * Type for application enforcement of expected values for student.status.
+ * Not constrained  at database level, to allow for future flexibility
+ * @enum {string}
+ * @readonly
+ */
+export const StudentStatusEnum = {
+  Active: 'Active',
+  Inactive: 'Inactive',
+  Graduated: 'Graduated',
+  EYFS: 'EYFS',
+} as const;
+
+export type StudentStatus = typeof StudentStatusEnum[keyof typeof StudentStatusEnum];
+
+/**
+ * SEN Status
+ * Type for application enforcement of expected values for student.senStatus.
+ * Not constrained  at database level, to allow for future flexibility
+ * @enum {string}
+ * @readonly
+ */
+export const SENStatusEnum = {
+  None: 'None',
+  SENSupport: 'SEN Support',
+  EHCP: 'EHCP',
+} as const;
+
+export type SENStatus = typeof SENStatusEnum[keyof typeof SENStatusEnum];
+
 export const studentSchema = pgTable('student', {
   id: uuid('id').defaultRandom().primaryKey(),
   organizationId: text('organization_id').references(() => organizationSchema.id).notNull(),
@@ -37,8 +69,8 @@ export const studentSchema = pgTable('student', {
   lastName: text('last_name').notNull(),
   dateOfBirth: timestamp('date_of_birth', { mode: 'date' }),
   enrollmentDate: timestamp('enrollment_date', { mode: 'date' }),
-  status: text('status'), // E.g., Active, Graduated
-  senStatus: text('sen_status'), // E.g., None, SEN Support, EHCP (Education, Health, and Care Plan)
+  status: text('status'), // $type<StudentStatus>() -
+  senStatus: text('sen_status'), // $type<SENStatus>() - Not constrained  at database level, to allow for future flexibility
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' })
     .defaultNow()

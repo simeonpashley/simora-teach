@@ -15,12 +15,12 @@ export const CenteredFooter = (props: {
     name: props.name,
   });
   const designedBy = t.rich('designed_by', {
-    author: chunks => (
+    author: () => (
       <a
         className="text-blue-500 hover:text-blue-600"
         href="https://simora.co.uk"
       >
-        {chunks}
+        Simora UK
       </a>
     ),
   });

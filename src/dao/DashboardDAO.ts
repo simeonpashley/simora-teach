@@ -1,11 +1,15 @@
-import { and, count, eq } from 'drizzle-orm';
+import { and, count, eq, gte, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/libs/DB';
 import {
   communicationLogSchema,
   iepSchema,
   milestoneTrackerSchema,
+  SENStatusEnum,
   studentSchema,
+  StudentStatusEnum,
+  termlyPlanningSchema,
+  weeklyPlanningSchema,
 } from '@/models/Schema';
 
 type CountResult<T extends string> = { [K in T]: number };
@@ -75,7 +79,7 @@ export class DashboardDAO {
         .where(
           and(
             eq(studentSchema.organizationId, organizationId),
-            eq(studentSchema.senStatus, 'SEN Support'),
+            eq(studentSchema.senStatus, SENStatusEnum.SENSupport),
           ),
         )
         .then((result: CountResult<'senStudents'>[]) => result[0] ?? { senStudents: 0 }),
@@ -87,7 +91,7 @@ export class DashboardDAO {
         .where(
           and(
             eq(studentSchema.organizationId, organizationId),
-            eq(studentSchema.status, 'EYFS'),
+            eq(studentSchema.status, StudentStatusEnum.EYFS),
           ),
         )
         .then((result: CountResult<'eyfsStudents'>[]) => result[0] ?? { eyfsStudents: 0 }),
@@ -99,7 +103,7 @@ export class DashboardDAO {
         .where(
           and(
             eq(studentSchema.organizationId, organizationId),
-            eq(studentSchema.status, 'Active'),
+            eq(studentSchema.status, StudentStatusEnum.Active),
           ),
         )
         .then((result: CountResult<'activeStudents'>[]) => result[0] ?? { activeStudents: 0 }),
@@ -111,7 +115,7 @@ export class DashboardDAO {
         .where(
           and(
             eq(studentSchema.organizationId, organizationId),
-            eq(studentSchema.status, 'Inactive'),
+            eq(studentSchema.status, StudentStatusEnum.Inactive),
           ),
         )
         .then((result: CountResult<'inactiveStudents'>[]) => result[0] ?? { inactiveStudents: 0 }),
@@ -208,28 +212,78 @@ export class DashboardDAO {
       // Count of activities this week
       db
         .select({ activitiesThisWeek: count() })
-        .from(communicationLogSchema)
-        .innerJoin(
-          studentSchema,
-          eq(communicationLogSchema.studentId, studentSchema.id),
-        )
+        .from(weeklyPlanningSchema)
         .where(
           and(
-            eq(studentSchema.organizationId, organizationId),
-            // Add condition for this week based on your schema
+            gte(weeklyPlanningSchema.weekStart, sql`date_trunc('week', CURRENT_DATE)`),
+            lte(weeklyPlanningSchema.weekEnd, sql`date_trunc('week', CURRENT_DATE) + interval '7 days'`),
           ),
         )
         .then((result: CountResult<'activitiesThisWeek'>[]) => result[0] ?? { activitiesThisWeek: 0 }),
 
-      // Termly progress percentage
-      Promise.resolve({ termlyProgress: 0 }), // Implement based on your schema
+      // Termly progress percentage - calculate percentage of termly objectives marked as "On Track"
+      db
+        .select({
+          termlyProgress: sql<number>`
+            ROUND(
+              (COUNT(CASE WHEN ${termlyPlanningSchema.planDetails} ILIKE '%[x]%' THEN 1 END)::float /
+              NULLIF(COUNT(*)::float, 0)) * 100
+            )
+          `,
+        })
+        .from(termlyPlanningSchema)
+        .where(
+          and(
+            gte(termlyPlanningSchema.termStart, sql`date_trunc('month', CURRENT_DATE - interval '3 months')`),
+            lte(termlyPlanningSchema.termEnd, sql`date_trunc('month', CURRENT_DATE + interval '3 months')`),
+          ),
+        )
+        .then(result => result[0] ?? { termlyProgress: 0 }),
 
       // Count of missed activities
-      Promise.resolve({ missedActivities: 0 }), // Implement based on your schema
+      db
+        .select({ missedActivities: count() })
+        .from(weeklyPlanningSchema)
+        .where(
+          and(
+            lte(weeklyPlanningSchema.weekEnd, sql`CURRENT_DATE`),
+            sql`${weeklyPlanningSchema.planDetails} NOT ILIKE '%[x]%'`,
+          ),
+        )
+        .then((result: CountResult<'missedActivities'>[]) => result[0] ?? { missedActivities: 0 }),
 
-      // Count of recent communications
+      // Count of recent communications (last 7 days)
       db
         .select({ recentCommunications: count() })
+        .from(communicationLogSchema)
+        .where(
+          gte(communicationLogSchema.date, sql`CURRENT_DATE - interval '7 days'`),
+        )
+        .then((result: CountResult<'recentCommunications'>[]) => result[0] ?? { recentCommunications: 0 }),
+
+      // Count of follow-ups due this week
+      db
+        .select({ followUpsDue: count() })
+        .from(communicationLogSchema)
+        .where(
+          and(
+            sql`${communicationLogSchema.notes} ILIKE '%TODO%' OR ${communicationLogSchema.notes} ILIKE '%FOLLOW-UP%'`,
+            gte(communicationLogSchema.date, sql`date_trunc('week', CURRENT_DATE)`),
+            lte(communicationLogSchema.date, sql`date_trunc('week', CURRENT_DATE) + interval '7 days'`),
+          ),
+        )
+        .then((result: CountResult<'followUpsDue'>[]) => result[0] ?? { followUpsDue: 0 }),
+
+      // Parent engagement percentage (last 30 days)
+      db
+        .select({
+          parentEngagement: sql<number>`
+            ROUND(
+              (COUNT(DISTINCT ${studentSchema.id})::float /
+              NULLIF((SELECT COUNT(*) FROM ${studentSchema} WHERE ${studentSchema.status} = ${StudentStatusEnum.Active})::float, 0)) * 100
+            )
+          `,
+        })
         .from(communicationLogSchema)
         .innerJoin(
           studentSchema,
@@ -237,17 +291,11 @@ export class DashboardDAO {
         )
         .where(
           and(
-            eq(studentSchema.organizationId, organizationId),
-            // Add condition for recent communications based on your schema
+            gte(communicationLogSchema.date, sql`CURRENT_DATE - interval '30 days'`),
+            eq(studentSchema.status, StudentStatusEnum.Active),
           ),
         )
-        .then((result: CountResult<'recentCommunications'>[]) => result[0] ?? { recentCommunications: 0 }),
-
-      // Count of follow-ups due
-      Promise.resolve({ followUpsDue: 0 }), // Implement based on your schema
-
-      // Parent engagement percentage
-      Promise.resolve({ parentEngagement: 0 }), // Implement based on your schema
+        .then(result => result[0] ?? { parentEngagement: 0 }),
     ]);
 
     return {
