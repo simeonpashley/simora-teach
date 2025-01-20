@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+
 import type { ApiErrorResponse, ApiResponse } from './types';
 
 export type RequestOptions = {
@@ -37,10 +39,8 @@ export abstract class BaseApiClient {
     } = options;
 
     // Construct URL with query parameters
-    const origin = typeof window !== 'undefined'
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-    const url = new URL(endpoint, origin + this.baseUrl);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:3000';
+    const url = new URL(endpoint, apiUrl + this.baseUrl);
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -49,11 +49,29 @@ export abstract class BaseApiClient {
       });
     }
 
-    // Prepare request options
+    // Prepare request options with different headers for client/server
     const requestOptions: RequestInit = {
       method,
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': '*/*',
+        ...(typeof window === 'undefined'
+          ? {
+              // Server-side: Forward cookies from the incoming request
+              Cookie: cookies().toString(),
+            }
+          : {
+              // Client-side: Set required Clerk headers
+              'Host': '127.0.0.1:3000',
+              'Origin': apiUrl,
+              'Referer': apiUrl,
+              'Sec-Fetch-Dest': 'empty',
+              'User-Agent': 'node',
+              'X-Forwarded-Host': '127.0.0.1:3000',
+              'X-Forwarded-Proto': 'http',
+            }
+        ),
         ...headers,
       },
     };
@@ -64,7 +82,7 @@ export abstract class BaseApiClient {
 
     // Make request
     try {
-      const response = await fetch(url, requestOptions);
+      const response = await fetch(url.toString(), requestOptions);
 
       // Check if response is JSON before attempting to parse
       const contentType = response.headers.get('content-type');
@@ -99,7 +117,7 @@ export abstract class BaseApiClient {
 
       return (data as ApiResponse<T>);
     } catch (error) {
-      console.warn(`url:${url} requestOptions:`, requestOptions);
+      console.warn(`url:${url.toString()} requestOptions:`, requestOptions);
       console.error('error', error);
       if (error instanceof ApiError) {
         throw error;
