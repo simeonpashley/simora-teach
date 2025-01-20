@@ -3,6 +3,7 @@
 At each stage, the product must be enhanced with a potentially shippable increment that meets the Definition of Done and adds measurable value to the overall product.
 
 Delivered in 4 distinct phases:
+
 1. Basic Setup
 2. Enhancements
 3. Actions and Interactivity
@@ -22,50 +23,34 @@ Delivered in 4 distinct phases:
      - Count of pending milestones (`milestoneTrackerSchema`).
      - Count of IEPs nearing due dates (`iepSchema`).
      - Scheduled meetings (`communicationLogSchema`).
-   - [ ] Display metrics in summary cards.
-      #### **1. Student Overview**
-      - [ ] Display the total number of students (`Total Students`).
-      - [ ] Display the number of students with active SEN designations (`SEN Students`).
-      - [ ] Display the number of students in EYFS stages (`EYFS Students`).
-      - [ ] Display the count of active vs. inactive students (`Active vs. Inactive Students`).
-      #### **2. Milestone Tracking**
-      - [ ] Display the total number of milestones yet to be marked as "Developing" or "Secure" (`Pending Milestones`).
-      - [ ] Display the percentage or count of milestones marked as "Secure" (`Completed Milestones`).
-      - [ ] Display milestones that are past their expected completion date (`Overdue Milestones`).
-      #### **3. IEP Management**
-      - [ ] Display the number of ongoing Individual Education Plans (`Active IEPs`).
-      - [ ] Display the count of IEPs with review dates within the next 30 days (`Upcoming IEP Reviews`).
-      - [ ] Display the percentage of IEP goals marked as "Completed" (`Completed IEP Goals`).
-      #### **4. Weekly and Termly Planning**
-      - [ ] Display the total number of weekly planned activities (`Activities Planned This Week`).
-      - [ ] Display the percentage of termly objectives marked as "On Track" (`Termly Progress`).
-      - [ ] Display the number of planned activities not marked as completed within the expected timeframe (`Missed Activities`).
-      #### **5. Communication Logs**
-      - [ ] Display the number of logged communications in the past 7 days (`Recent Communications`).
-      - [ ] Display the count of follow-up actions scheduled for the current week (`Follow-Ups Due`).
-      - [ ] Display the percentage of parents involved in recent meetings or updates (`Parent Engagement`).
-   - [ ] Implement navigation links to milestones, IEPs, and weekly planner pages.
+   - [x] Display metrics in summary cards.
+      1. Student Overview
+      - [x] Display the total number of students (`Total Students`).
+      - [x] Display the number of students with active SEN designations (`SEN Students`).
+      - [x] Display the number of students in EYFS stages (`EYFS Students`).
+      - [x] Display the count of active vs. inactive students (`Active vs. Inactive Students`).
+      2. Milestone Tracking
+      - [x] Display the total number of milestones yet to be marked as "Developing" or "Secure" (`Pending Milestones`).
+      - [x] Display the percentage or count of milestones marked as "Secure" (`Completed Milestones`).
+      - [x] Display milestones that are past their expected completion date (`Overdue Milestones`).
+      3. IEP Management
+      - [x] Display the number of ongoing Individual Education Plans (`Active IEPs`).
+      - [x] Display the count of IEPs with review dates within the next 30 days (`Upcoming IEP Reviews`).
+      - [x] Display the percentage of IEP goals marked as "Completed" (`Completed IEP Goals`).
+   - [x] Display metrics in summary cards.
+      4. Weekly and Termly Planning
+      - [x] Display the total number of weekly planned activities (`Activities Planned This Week`).
+      - [x] Display the percentage of termly objectives marked as "On Track" (`Termly Progress`).
+      - [x] Display the number of planned activities not marked as completed within the expected timeframe (`Missed Activities`).
+      5. Communication Logs
+      - [x] Display the number of logged communications in the past 7 days (`Recent Communications`).
+      - [x] Display the count of follow-up actions scheduled for the current week (`Follow-Ups Due`).
+      - [x] Display the percentage of parents involved in recent meetings or updates (`Parent Engagement`).
    - [ ] Write unit tests to verify
    - [ ] Ensure all tests pass.
 
-Yes, implementing navigation links to milestones, IEPs, and weekly planner pages will require a similar structured task list for each page to ensure the necessary functionality is delivered systematically.
+#### **Feature: Milestones Tracker Page**
 
-Here's the markdown task list for implementing these pages:
-
----
-
-### **Navigation Links Implementation Task List**
-
-#### **1. Add Navigation Links**
-- [ ] Add a navigation link to the **Milestones Tracker** page in the dashboard.
-- [ ] Add a navigation link to the **IEPs Management** page in the dashboard.
-- [ ] Add a navigation link to the **Weekly Planner** page in the dashboard.
-
----
-
-### **Milestones Tracker Page**
-
-#### **1. Basic Setup**
 - [ ] Create a new page for **Milestones Tracker** at `/dashboard/milestones`.
 - [ ] Fetch milestone data from the database using `milestoneTrackerSchema`.
 - [ ] Display milestones in a table with the following columns:
@@ -75,23 +60,8 @@ Here's the markdown task list for implementing these pages:
   - [ ] Status (Emerging, Developing, Secure)
   - [ ] Evidence (link or text snippet).
 
-#### **2. Enhancements**
-- [ ] Add filters for milestone category (e.g., Communication, Physical Development).
-- [ ] Add sorting by milestone status.
-- [ ] Implement pagination for large datasets.
+#### **Feature: IEPs Management Page**
 
-#### **3. Actions and Interactivity**
-- [ ] Add an inline editor to update milestone status and evidence.
-- [ ] Write unit tests to verify:
-  - [ ] Milestone data fetches correctly.
-  - [ ] Filters, sorting, and pagination work as expected.
-  - [ ] Inline editing updates the database and UI correctly.
-
----
-
-### **IEPs Management Page**
-
-#### **1. Basic Setup**
 - [ ] Create a new page for **IEPs Management** at `/dashboard/ieps`.
 - [ ] Fetch IEP data from the database using `iepSchema`.
 - [ ] Display IEPs in a table with the following columns:
@@ -102,58 +72,19 @@ Here's the markdown task list for implementing these pages:
   - [ ] Evidence (link or text snippet).
   - [ ] Due Date.
 
-#### **2. Enhancements**
-- [ ] Add search functionality for student name and goal name.
-- [ ] Add sorting by status or progress.
-- [ ] Implement pagination for large datasets.
+#### **Feature: Weekly Planner Page**
 
-#### **3. Actions and Interactivity**
-- [ ] Add a button to create a new IEP, opening a modal with the following fields:
-  - Goal Name
-  - Description
-  - Start Date
-  - Due Date
-  - Evidence (Markdown input or URL).
-- [ ] Allow inline editing for progress and status updates.
-- [ ] Write unit tests to verify:
-  - [ ] IEP data fetches correctly.
-  - [ ] Filters, sorting, and pagination work as expected.
-  - [ ] Inline edits and modal save data as expected.
-
-### **Weekly Planner Page**
-
-#### **1. Basic Setup**
 - [ ] Create a new page for **Weekly Planner** at `/dashboard/weekly-planner`.
 - [ ] Fetch weekly plans from the database using `weeklyPlanningSchema`.
 - [ ] Display plans in a calendar-like layout, grouped by week, with the following fields:
   - [ ] Week Start and End Dates.
   - [ ] Plan Details (e.g., activity descriptions).
 
-#### **2. Enhancements**
-- [ ] Add the ability to create new weekly plans, opening a modal with:
-  - Week Start and End Dates.
-  - Plan Details (rich text or Markdown).
-- [ ] Add an inline editor to update plan details.
+#### **Feature: Dashboard Overview**
 
-#### **3. Actions and Interactivity**
-- [ ] Add bulk actions to delete or mark plans as completed.
-- [ ] Write unit tests to verify:
-  - [ ] Weekly plan data fetches correctly.
-  - [ ] Calendar layout displays weekly plans as expected.
-  - [ ] Inline editing and modal save data as expected.
-
----
-
-### **Testing Tasks for All Pages**
-1. Write unit tests to verify:
-   - [ ] Data is fetched and displayed correctly for each page.
-   - [ ] Actions like filtering, sorting, and pagination work as expected.
-   - [ ] Inline editors and modals update data successfully.
-2. Test the navigation flow:
-   - [ ] Clicking a link on the dashboard navigates to the correct page.
-   - [ ] Browser back and forward buttons behave as expected.
-3. Run integration tests to confirm:
-   - [ ] All pages work together without breaking the navigation or dashboard.
+- [ ] Add a navigation link to the **Milestones Tracker** page in the dashboard.
+- [ ] Add a navigation link to the **IEPs Management** page in the dashboard.
+- [ ] Add a navigation link to the **Weekly Planner** page in the dashboard.
 
 #### **Feature: Student Management**
 
@@ -204,7 +135,52 @@ Here's the markdown task list for implementing these pages:
      - [ ] Graph displays correct data.
      - [ ] Loading and error states behave as expected.
 
----
+**2. Enhancements**
+**Milestones Tracker Page**
+- [ ] Add filters for milestone category (e.g., Communication, Physical Development).
+- [ ] Add sorting by milestone status.
+- [ ] Implement pagination for large datasets.
+### **IEPs Management Page**
+- [ ] Add search functionality for student name and goal name.
+- [ ] Add sorting by status or progress.
+- [ ] Implement pagination for large datasets.
+
+### **Weekly Planner Page**
+- [ ] Add the ability to create new weekly plans, opening a modal with:
+  - Week Start and End Dates.
+  - Plan Details (rich text or Markdown).
+- [ ] Add an inline editor to update plan details.
+
+**3. Actions and Interactivity**
+**Milestones Tracker Page**
+
+- [ ] Add an inline editor to update milestone status and evidence.
+- [ ] Write unit tests to verify:
+  - [ ] Milestone data fetches correctly.
+  - [ ] Filters, sorting, and pagination work as expected.
+  - [ ] Inline editing updates the database and UI correctly.
+
+**IEPs Management Page**
+
+- [ ] Add a button to create a new IEP, opening a modal with the following fields:
+  - Goal Name
+  - Description
+  - Start Date
+  - Due Date
+  - Evidence (Markdown input or URL).
+- [ ] Allow inline editing for progress and status updates.
+- [ ] Write unit tests to verify:
+  - [ ] IEP data fetches correctly.
+  - [ ] Filters, sorting, and pagination work as expected.
+  - [ ] Inline edits and modal save data as expected.
+
+**Weekly Planner Page**
+
+- [ ] Add bulk actions to delete or mark plans as completed.
+- [ ] Write unit tests to verify:
+  - [ ] Weekly plan data fetches correctly.
+  - [ ] Calendar layout displays weekly plans as expected.
+  - [ ] Inline editing and modal save data as expected.
 
 #### **Feature: Student Management**
 
