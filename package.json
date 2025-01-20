@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest",
-    "test:before-all": "tsc --noEmit --pretty  --project tsconfig.json",
+    "test:before-all": "tsc --noEmit --pretty  --project tsconfig.typecheck.json",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
