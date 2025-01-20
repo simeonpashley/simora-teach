@@ -1,3 +1,6 @@
+'use client';
+
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +15,7 @@ type MetricCardProps = {
     label: string;
     isPositive: boolean;
   };
+  href?: string;
 };
 
 export function MetricCard({
@@ -20,9 +24,10 @@ export function MetricCard({
   icon,
   description,
   trend,
+  href,
 }: MetricCardProps) {
-  return (
-    <Card className="overflow-hidden">
+  const content = (
+    <>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon && <div className="text-muted-foreground">{icon}</div>}
@@ -46,6 +51,22 @@ export function MetricCard({
           </div>
         )}
       </CardContent>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className="block transition-opacity hover:opacity-80">
+        <Card className="overflow-hidden">
+          {content}
+        </Card>
+      </Link>
+    );
+  }
+
+  return (
+    <Card className="overflow-hidden">
+      {content}
     </Card>
   );
 }

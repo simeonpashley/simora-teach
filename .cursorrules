@@ -10,6 +10,15 @@
 - "Rose" or "Rose by Simora" is the public facing name of the product.
 </general_guidelines>
 
+<technology_stack>
+- NextJS v15 with App Router w/ React v19
+- In order: @tanstack/react-table, @shacdn/ui then @radix-ui
+- TailwindCSS v3
+- Drizzle ORM
+- Clerk Auth
+- Jest & React Testing Library
+</technology_stack>
+
 <data_access>
 There is a clear separation of concerns as described below:
 

@@ -55,46 +55,52 @@ Support site wide toast notifications at the root layout so they behave smoothly
 
 **Settings page**
 
-- [ ] Create a new page for **Settings** at `/settings`.
-- [ ] Add a navigation link to the **Settings** page on `src/app/[locale]/(auth)/dashboard/layout.tsx`.
-- [ ] Create a tabbed component
-- [ ] add a Tab for "Actions"
-- [ ] On the Actions Tab - add a red button to "Create Test Data"
-- [ ] On click of "Create Test Data" show a "danger" confirmation modal with long form text "This will replace your organization data with test data".
-- [ ] On confirmation, close the confirmation modal and new "busy" modal with a spinner
-- [ ] Invoke a stubbed/dummy function, emulating a long running process for 5 secondds.
-- [ ] Close the "busy" modal
-- [ ] If there are errors, report any errors in a modal.
-- [ ] If there are no errors, report success in a modal, on confirmation return the user to '/dashboard' to refresh the page.
-
-- [ ] add new API functionality to set the organisation to a test template.
-- [ ] Call the new API function after the "Create Test Data" confirmation. This test template will be equivalent to the "seed.ts" file.
-- [ ] process the API response and report any errors, add a "Success" toast notification.
-
-- [ ] After the "danger" confirmation is confirned, insert a second "danger" confirmation modal with the text "Are you really sure?". IMPORTANT: This modal must have the buttons swapped left-right so they user cannot accidentally confirm without moving their mouse.
+- [x] Create a new page for **Settings** at `/settings`.
+- [x] Add a navigation link to the **Settings** page on `src/app/[locale]/(auth)/dashboard/layout.tsx`.
+- [x] Create a tabbed component
+- [x] add a Tab for "Actions"
+- [x] On the Actions Tab - add a red button to "Create Test Data"
+- [x] On click of "Create Test Data" show a "danger" confirmation modal with long form text "This will replace your organization data with test data".
+- [x] On confirmation, close the confirmation modal and new "busy" modal with a spinner
+- [x] Invoke a stubbed/dummy function, emulating a long running process for 5 secondds.
+- [x] Close the "busy" modal
+- [x] If there are errors, report any errors in a modal.
+- [x] If there are no errors, report success in a modal, on confirmation return the user to '/dashboard' to refresh the page.
+- [x] add new API functionality to set the organisation to a test template.
+- [x] Call the new API function after the "Create Test Data" confirmation. This test template will be equivalent to the "seed.ts" file.
+- [x] process the API response and report any errors, add a "Success" toast notification.
+- [x] After the "danger" confirmation is confirned, insert a second "danger" confirmation modal with the text "Are you really sure?". IMPORTANT: This modal must have the buttons swapped left-right so they user cannot accidentally confirm without moving their mouse.
 
 #### **Feature: Milestones Tracker Page**
 
-- [ ] Create a new page for **Milestones Tracker** at `/dashboard/milestones`.
-- [ ] Fetch milestone data from the database using `milestoneTrackerSchema`.
-- [ ] Display milestones in a table with the following columns:
-  - [ ] Student Name
-  - [ ] Milestone Name
-  - [ ] Milestone Category
-  - [ ] Status (Emerging, Developing, Secure)
-  - [ ] Evidence (link or text snippet).
+- [x] Create a new page for **Milestones Tracker** at `/dashboard/milestones`.
+- [x] When the user clicks the "Milestone Tracking" dashboard card, link to the **Milestones Tracker** page.
+- [x] Use the local API to fetch data from the database using `milestoneTrackerSchema`.
+  - [x] Use the following columns:
+    - [x] Student Name
+    - [x] Milestone Name
+    - [x] Milestone Category
+    - [x] Status (Emerging, Developing, Secure)
+    - [x] Evidence. The field is stored in Markdown format, rendered as html on screen.
+- [x] Display milestones in a table using or extending '@/components/ui/data-table', refer to `src/features/students/StudentList.tsx` for an example.
+- [x] As Evidence can be long form, show an excerpt that clicks through to a modal with the full evidence.
+- [x] On Dashboard, the "Milestone Tracking" heading should link an unfiltered report. For the "Pending", "Completed" and "Overdue" cards, link to a filtered view of the milestones tracker page.
 
 #### **Feature: IEPs Management Page**
 
 - [ ] Create a new page for **IEPs Management** at `/dashboard/ieps`.
-- [ ] Fetch IEP data from the database using `iepSchema`.
-- [ ] Display IEPs in a table with the following columns:
-  - [ ] Student Name
-  - [ ] Goal Name
-  - [ ] Progress (%)
-  - [ ] Status (In Progress, Completed)
-  - [ ] Evidence (link or text snippet).
-  - [ ] Due Date.
+- [ ] When the user clicks the heading, link to the unfiltered page.
+- [ ] Use the local API to fetch data from the database using `iepSchema`.
+  - [ ] Use the following columns:
+    - [ ] Student Name
+    - [ ] Goal Name
+    - [ ] Progress (%)
+    - [ ] Status (In Progress, Completed)
+    - [ ] Evidence.
+    - [ ] Due Date.
+- [ ] Display content in a table using or extending '@/components/ui/data-table', refer to `src/features/students/StudentList.tsx` for an example.
+- [ ] As Evidence can be long form, show an excerpt that clicks through to a modal with the full evidence.
+- [ ] On Dashboard, the heading should link an unfiltered report. The cards, link to a filtered view of the milestones tracker page.
 
 #### **Feature: Weekly Planner Page**
 
@@ -106,7 +112,6 @@ Support site wide toast notifications at the root layout so they behave smoothly
 
 #### **Feature: Dashboard Overview**
 
-- [ ] Add a navigation link to the **Milestones Tracker** page in the dashboard.
 - [ ] Add a navigation link to the **IEPs Management** page in the dashboard.
 - [ ] Add a navigation link to the **Weekly Planner** page in the dashboard.
 

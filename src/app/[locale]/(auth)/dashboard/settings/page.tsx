@@ -19,12 +19,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 
 export default function SettingsPage() {
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isFirstConfirmOpen, setIsFirstConfirmOpen] = useState(false);
+  const [isSecondConfirmOpen, setIsSecondConfirmOpen] = useState(false);
   const [isBusyModalOpen, setIsBusyModalOpen] = useState(false);
   const { toast } = useToast();
 
+  const handleFirstConfirm = () => {
+    setIsFirstConfirmOpen(false);
+    setIsSecondConfirmOpen(true);
+  };
+
   const handleCreateData = async () => {
-    setIsConfirmOpen(false);
+    setIsSecondConfirmOpen(false);
     setIsBusyModalOpen(true);
 
     try {
@@ -59,7 +65,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <Button
               variant="destructive"
-              onClick={() => setIsConfirmOpen(true)}
+              onClick={() => setIsFirstConfirmOpen(true)}
               disabled={isBusyModalOpen}
             >
               Create Data
@@ -68,8 +74,8 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Confirmation Dialog */}
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+      {/* First Confirmation Dialog */}
+      <AlertDialog open={isFirstConfirmOpen} onOpenChange={setIsFirstConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -80,10 +86,31 @@ export default function SettingsPage() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleCreateData}
+              onClick={handleFirstConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Second Confirmation Dialog - with swapped buttons */}
+      <AlertDialog open={isSecondConfirmOpen} onOpenChange={setIsSecondConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you really sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. All existing organization data will be replaced.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse sm:justify-start">
+            <AlertDialogCancel className="mt-0 sm:ml-0">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleCreateData}
+              className="mt-0 bg-destructive text-destructive-foreground hover:bg-destructive/90 sm:mr-3"
+            >
+              Yes, I'm Sure
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

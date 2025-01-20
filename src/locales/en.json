@@ -169,23 +169,25 @@
   "Students": {
     "meta_title": "My Students - Simora Teach",
     "meta_description": "Manage and view your students",
-    "title": "My Students",
+    "title": "Students",
     "description": "View and manage your student list",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "date_of_birth": "D.O.B.",
-    "enrollment_date": "Enrolled",
+    "date_of_birth": "Date of Birth",
+    "enrollment_date": "Enrollment Date",
     "status": "Status",
-    "actions": "Actions",
-    "edit": "Edit",
-    "error_loading_students": "Error loading students",
-    "search_placeholder": "Search students...",
-    "all_statuses": "All Statuses",
     "status_active": "Active",
     "status_inactive": "Inactive",
     "status_pending": "Pending",
-    "selected_count": "{count, plural, =1 {# student} other {# students}} selected",
-    "delete_selected": "Delete Selected"
+    "status_unknown": "Unknown",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search_placeholder": "Search students...",
+    "all_statuses": "All Statuses",
+    "selected_count": "{count} students selected",
+    "delete_selected": "Delete Selected",
+    "error_loading_students": "Error loading students"
   },
   "DashboardIndex": {
     "meta_title": "Dashboard Rose by Simora",
@@ -197,9 +199,10 @@
   },
   "DashboardLayout": {
     "home": "Home",
+    "milestones": "Milestones",
+    "organization_profile": "Organization",
     "members": "Members",
-    "settings": "Settings",
-    "organization_profile": "Organization Profile"
+    "settings": "Settings"
   },
   "Error": {
     "title": "Something went wrong!",
@@ -215,5 +218,26 @@
     "title": "Page not found",
     "description": "We couldn't find the page you were looking for.",
     "back_to_home": "Back to Home"
+  },
+  "Milestones": {
+    "title": "Milestones Tracker",
+    "student_name": "Student Name",
+    "milestone_name": "Milestone Name",
+    "category": "Category",
+    "status": "Status",
+    "evidence": "Evidence",
+    "recorded_at": "Recorded At",
+    "status_emerging": "Emerging",
+    "status_developing": "Developing",
+    "status_secure": "Secure",
+    "all_categories": "All Categories",
+    "all_statuses": "All Statuses",
+    "category_communication": "Communication",
+    "category_physical": "Physical Development",
+    "category_social": "Social Development",
+    "category_cognitive": "Cognitive Development",
+    "search_placeholder": "Search milestones...",
+    "error_loading_milestones": "Error loading milestones",
+    "evidence_for": "Evidence for {milestone}"
   }
 }
