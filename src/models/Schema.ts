@@ -7,8 +7,10 @@ import {
 } from 'drizzle-orm/pg-core';
 
 // Organization Table
+// Clerk is the source of truth for organizations.
+// Clerk data is extended with our data in this table.
 export const organizationSchema = pgTable('organization', {
-  id: uuid('id').defaultRandom().primaryKey(),
+  id: text('id').primaryKey(), // REQUIRED: `text` must be used to match Clerk's organization ID
   stripeCustomerId: text('stripe_customer_id'),
   stripeSubscriptionId: text('stripe_subscription_id'),
   stripeSubscriptionPriceId: text('stripe_subscription_price_id'),
@@ -24,25 +26,13 @@ export const organizationSchema = pgTable('organization', {
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });
 
-// User Table
-export const userSchema = pgTable('user', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').references(() => organizationSchema.id).notNull(),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
-  email: text('email').notNull().unique(),
-  role: text('role').notNull(), // e.g., Admin, Teacher
-  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'date' })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+// Users are managed inside Clerk.
+// NO USER TABLE IS NEEDED.
 
 // Student Table
 export const studentSchema = pgTable('student', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').references(() => organizationSchema.id).notNull(),
+  organizationId: text('organization_id').references(() => organizationSchema.id).notNull(),
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
   dateOfBirth: timestamp('date_of_birth', { mode: 'date' }),
@@ -142,7 +132,7 @@ export const iepSchema = pgTable('iep', {
 
 export const reportSchema = pgTable('report', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').references(() => organizationSchema.id).notNull(),
+  organizationId: text('organization_id').references(() => organizationSchema.id).notNull(),
   studentId: uuid('student_id').references(() => studentSchema.id), // Nullable if it's a group report
   reportType: text('report_type').notNull(), // E.g., "Milestone Report", "IEP Summary"
   content: text('content').notNull(), // Markdown for report content

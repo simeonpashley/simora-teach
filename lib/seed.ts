@@ -27,7 +27,6 @@ import {
   organizationSchema,
   studentSchema,
   termlyPlanningSchema,
-  userSchema,
   weeklyPlanningSchema,
 } from '../src/models/Schema';
 
@@ -94,15 +93,16 @@ async function seed() {
 
     // Delete parent tables
     await db.delete(studentSchema);
-    await db.delete(userSchema);
     await db.delete(organizationSchema);
 
     console.log('Tables truncated.');
 
+    const clerkId = 'org_2rm1qb49cFwGSTzgCKf3hYBFdx4';
     // Seed Organizations
     const organization = await db
       .insert(organizationSchema)
       .values({
+        clerkId,
         stripeCustomerId: faker.string.uuid(),
         stripeSubscriptionId: faker.string.uuid(),
         stripeSubscriptionPriceId: faker.string.uuid(),
@@ -110,19 +110,6 @@ async function seed() {
       })
       .returning({ id: organizationSchema.id });
     const organizationId = organization[0]?.id ?? 'organization-1';
-
-    // Seed Users
-    await db
-      .insert(userSchema)
-      .values({
-        organizationId,
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        role: 'Teacher',
-      })
-      .returning({ id: userSchema.id });
-    // const _userId = user[0]?.id ?? 'user-1';
 
     // Seed Students
     const students = await db

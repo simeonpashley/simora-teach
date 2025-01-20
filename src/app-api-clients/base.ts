@@ -59,7 +59,9 @@ export abstract class BaseApiClient {
         ...(typeof window === 'undefined'
           ? {
               // Server-side: Forward cookies from the incoming request
-              Cookie: cookies().toString(),
+              Cookie: cookies().getAll()
+                .map(cookie => `${cookie.name}=${cookie.value}`)
+                .join('; '),
             }
           : {
               // Client-side: Set required Clerk headers

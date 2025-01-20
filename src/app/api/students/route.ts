@@ -34,8 +34,8 @@ export async function OPTIONS() {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { userId, orgId } = getAuth(request);
+    if (!userId || !orgId) {
       throw ApiError.unauthorized();
     }
 
@@ -73,8 +73,8 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { userId, orgId } = getAuth(request);
+    if (!userId || !orgId) {
       throw ApiError.unauthorized();
     }
 
