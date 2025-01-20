@@ -70,7 +70,7 @@ export abstract class BaseApiClient {
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
-        console.warn('Received non-JSON response:', text);
+        console.warn(`Received non-JSON response: {{${text}}}`);
         throw new ApiError(
           'Server returned non-JSON response',
           response.status,

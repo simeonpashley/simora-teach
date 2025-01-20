@@ -1,4 +1,4 @@
-import { authMiddleware, redirectToSignIn } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
@@ -9,48 +9,38 @@ const intlMiddleware = createMiddleware({
   localePrefix: 'as-needed',
 });
 
-export default authMiddleware({
-  beforeAuth: (req) => {
-    // Skip intl middleware for API routes
-    if (req.nextUrl.pathname.startsWith('/api')) {
-      return NextResponse.next();
-    }
-    return intlMiddleware(req);
-  },
-  afterAuth: (auth, req) => {
-    // For API routes, ensure authentication except for public routes
-    if (req.nextUrl.pathname.startsWith('/api')) {
-      if (!auth.userId && !req.nextUrl.pathname.startsWith('/api/webhooks')) {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 },
-        );
-      }
-      return NextResponse.next();
-    }
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/sign-in',
+  '/sign-up',
+  '/api/webhooks(.*)',
+]);
 
-    // For non-API routes, redirect to sign-in if not authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({ returnBackUrl: req.url });
+export default clerkMiddleware(async (auth, req) => {
+  if (req.nextUrl.pathname.startsWith('/api')) {
+    if (!(await auth()).userId && !req.nextUrl.pathname.startsWith('/api/webhooks')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 },
+      );
     }
     return NextResponse.next();
-  },
-  publicRoutes: [
-    '/',
-    '/sign-in',
-    '/sign-up',
-    '/api/webhooks(.*)',
-  ],
+  }
+
+  // For non-API routes, redirect to sign-in if not authenticated
+  if (!isPublicRoute(req)) {
+    await auth.protect();
+  }
+
+  return intlMiddleware(req);
 });
 
 // Update matcher to exclude static files and include API routes
 export const config = {
   matcher: [
-    // Match all paths except static files and API routes
-    '/((?!.+\\.[\\w]+$|_next).*)',
-    // Match root path
-    '/',
-    // Match API routes
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
     '/(api|trpc)(.*)',
   ],
 };
