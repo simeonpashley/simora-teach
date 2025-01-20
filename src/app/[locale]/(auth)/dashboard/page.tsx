@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 import type { DashboardMetrics } from '@/app-api-clients/dashboard';
 import { dashboardApiClient } from '@/app-api-clients/dashboard';
-import type { ApiResponse } from '@/app-api-clients/types';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
 import { CommunicationOverview } from '@/features/dashboard/CommunicationOverview';
 import { DashboardSkeleton } from '@/features/dashboard/DashboardSkeleton';
@@ -14,6 +13,7 @@ import { IEPOverview } from '@/features/dashboard/IEPOverview';
 import { MilestoneOverview } from '@/features/dashboard/MilestoneOverview';
 import { StudentOverview } from '@/features/dashboard/StudentOverview';
 import { WeeklyPlanningOverview } from '@/features/dashboard/WeeklyPlanningOverview';
+import type { ApiResponse } from '@/types/ApiResponse';
 
 export default function DashboardPage() {
   const clerkAuth = useAuth();
@@ -76,7 +76,7 @@ export default function DashboardPage() {
                       Key metrics about your student population
                     </p>
                   </div>
-                  <StudentOverview metrics={metrics.data.students} />
+                  <StudentOverview metrics={metrics.data?.students} />
                 </div>
 
                 <div className="space-y-4">
@@ -86,7 +86,7 @@ export default function DashboardPage() {
                       Progress on student milestones and achievements
                     </p>
                   </div>
-                  <MilestoneOverview metrics={metrics.data.milestones} />
+                  <MilestoneOverview metrics={metrics.data?.milestones} />
                 </div>
 
                 <div className="space-y-4">
@@ -96,7 +96,7 @@ export default function DashboardPage() {
                       Individual Education Plan progress and reviews
                     </p>
                   </div>
-                  <IEPOverview metrics={metrics.data.ieps} />
+                  <IEPOverview metrics={metrics.data?.ieps} />
                 </div>
 
                 <div className="space-y-4">
@@ -106,7 +106,7 @@ export default function DashboardPage() {
                       Overview of weekly activities and termly progress
                     </p>
                   </div>
-                  <WeeklyPlanningOverview metrics={metrics.data.weeklyPlanning} />
+                  <WeeklyPlanningOverview metrics={metrics.data?.weeklyPlanning} />
                 </div>
 
                 <div className="space-y-4">
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                       Recent communications and parent engagement metrics
                     </p>
                   </div>
-                  <CommunicationOverview metrics={metrics.data.communications} />
+                  <CommunicationOverview metrics={metrics.data?.communications} />
                 </div>
               </div>
             )}

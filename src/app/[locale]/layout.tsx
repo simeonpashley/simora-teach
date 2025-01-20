@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 
+import { Toaster } from '@/components/ui/toaster';
 import { getMessages } from '@/i18n';
 import { AllLocales } from '@/utils/AppConfig';
 
@@ -75,6 +76,7 @@ export default async function RootLayout(props: {
               dynamic
             >
               {props.children}
+              <Toaster />
             </ClerkProvider>
           </NextIntlClientProvider>
         </body>

@@ -1,4 +1,4 @@
-import type { ApiErrorResponse, ApiResponse } from './types';
+import type { ApiErrorResponse, ApiResponse } from '../types/ApiResponse';
 
 export type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';

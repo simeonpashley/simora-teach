@@ -3,7 +3,7 @@ import { ClipboardList, MessageCircle, Users2 } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
 
 type CommunicationOverviewProps = {
-  metrics: {
+  metrics?: {
     recentCount: number;
     followUpsDue: number;
     parentEngagement: number;
@@ -11,6 +11,10 @@ type CommunicationOverviewProps = {
 };
 
 export function CommunicationOverview({ metrics }: CommunicationOverviewProps) {
+  if (!metrics) {
+    return null;
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <MetricCard

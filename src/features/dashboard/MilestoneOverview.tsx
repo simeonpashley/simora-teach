@@ -3,7 +3,7 @@ import { CheckCircle, Clock, Target } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
 
 type MilestoneOverviewProps = {
-  metrics: {
+  metrics?: {
     pending: number;
     completed: number;
     overdue: number;
@@ -11,6 +11,10 @@ type MilestoneOverviewProps = {
 };
 
 export function MilestoneOverview({ metrics }: MilestoneOverviewProps) {
+  if (!metrics) {
+    return null;
+  }
+
   const total = metrics.pending + metrics.completed + metrics.overdue;
   const completionRate = Math.round((metrics.completed / total) * 100);
 

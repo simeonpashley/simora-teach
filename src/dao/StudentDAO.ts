@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
-import { db } from '@/libs/DB';
+import { db } from '@/lib/db';
 import { studentSchema } from '@/models/Schema';
 
 export type SortOrder = 'asc' | 'desc';

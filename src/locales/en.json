@@ -198,7 +198,8 @@
   "DashboardLayout": {
     "home": "Home",
     "members": "Members",
-    "settings": "Settings"
+    "settings": "Settings",
+    "organization_profile": "Organization Profile"
   },
   "Error": {
     "title": "Something went wrong!",

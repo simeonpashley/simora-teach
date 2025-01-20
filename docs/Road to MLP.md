@@ -46,8 +46,32 @@ Delivered in 4 distinct phases:
       - [x] Display the number of logged communications in the past 7 days (`Recent Communications`).
       - [x] Display the count of follow-up actions scheduled for the current week (`Follow-Ups Due`).
       - [x] Display the percentage of parents involved in recent meetings or updates (`Parent Engagement`).
-   - [ ] Write unit tests to verify
-   - [ ] Ensure all tests pass.
+   - [x] Write unit tests to verify
+   - [x] Ensure all tests pass.
+
+**Toast Notifications**
+
+Support site wide toast notifications at the root layout so they behave smoothly as the user navigates between pages.
+
+**Settings page**
+
+- [ ] Create a new page for **Settings** at `/settings`.
+- [ ] Add a navigation link to the **Settings** page on `src/app/[locale]/(auth)/dashboard/layout.tsx`.
+- [ ] Create a tabbed component
+- [ ] add a Tab for "Actions"
+- [ ] On the Actions Tab - add a red button to "Create Test Data"
+- [ ] On click of "Create Test Data" show a "danger" confirmation modal with long form text "This will replace your organization data with test data".
+- [ ] On confirmation, close the confirmation modal and new "busy" modal with a spinner
+- [ ] Invoke a stubbed/dummy function, emulating a long running process for 5 secondds.
+- [ ] Close the "busy" modal
+- [ ] If there are errors, report any errors in a modal.
+- [ ] If there are no errors, report success in a modal, on confirmation return the user to '/dashboard' to refresh the page.
+
+- [ ] add new API functionality to set the organisation to a test template.
+- [ ] Call the new API function after the "Create Test Data" confirmation. This test template will be equivalent to the "seed.ts" file.
+- [ ] process the API response and report any errors, add a "Success" toast notification.
+
+- [ ] After the "danger" confirmation is confirned, insert a second "danger" confirmation modal with the text "Are you really sure?". IMPORTANT: This modal must have the buttons swapped left-right so they user cannot accidentally confirm without moving their mouse.
 
 #### **Feature: Milestones Tracker Page**
 

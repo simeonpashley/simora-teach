@@ -3,7 +3,7 @@ import { Users } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
 
 type StudentOverviewProps = {
-  metrics: {
+  metrics?: {
     total: number;
     senStudents: number;
     eyfsStudents: number;
@@ -13,6 +13,10 @@ type StudentOverviewProps = {
 };
 
 export function StudentOverview({ metrics }: StudentOverviewProps) {
+  if (!metrics) {
+    return null;
+  }
+
   const activePercentage = Math.round(
     (metrics.activeStudents / metrics.total) * 100,
   );

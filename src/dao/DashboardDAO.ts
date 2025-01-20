@@ -1,6 +1,6 @@
 import { and, count, eq, gte, lte, sql } from 'drizzle-orm';
 
-import { db } from '@/libs/DB';
+import { db } from '@/lib/db';
 import {
   communicationLogSchema,
   iepSchema,

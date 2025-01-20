@@ -329,7 +329,7 @@ The App Router folder is compatible with the Edge runtime. You can enable it by 
 export const runtime = 'edge';
 ```
 
-For your information, the database migration is not compatible with the Edge runtime. So, you need to disable the automatic migration in `src/libs/DB.ts`:
+For your information, the database migration is not compatible with the Edge runtime. So, you need to disable the automatic migration in `src/lib/db/index.ts`:
 
 ```tsx
 await migrate(db, { migrationsFolder: './migrations' });

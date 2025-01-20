@@ -6,7 +6,7 @@ export type PaginationResponse = {
 };
 
 export type ApiResponse<T> = {
-  data: T;
+  data?: T;
   pagination?: PaginationResponse;
   error?: string;
   details?: unknown; // Only included in development mode

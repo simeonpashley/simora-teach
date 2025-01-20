@@ -6,7 +6,7 @@ import { Client } from 'pg';
 
 import * as schema from '@/models/Schema';
 
-import { Env } from './Env';
+import { Env } from '../../libs/Env';
 
 // Initialize DB connection
 const initializeDb = async () => {

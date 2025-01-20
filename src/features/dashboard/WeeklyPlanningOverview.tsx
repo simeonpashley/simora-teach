@@ -3,7 +3,7 @@ import { Calendar, CheckCircle2, XCircle } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
 
 type WeeklyPlanningOverviewProps = {
-  metrics: {
+  metrics?: {
     activitiesThisWeek: number;
     termlyProgress: number;
     missedActivities: number;
@@ -11,6 +11,9 @@ type WeeklyPlanningOverviewProps = {
 };
 
 export function WeeklyPlanningOverview({ metrics }: WeeklyPlanningOverviewProps) {
+  if (!metrics) {
+    return null;
+  }
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <MetricCard

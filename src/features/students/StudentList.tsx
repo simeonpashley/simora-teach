@@ -49,7 +49,10 @@ export function StudentList() {
         { sortBy: sortBy as keyof Student, sortOrder },
       );
 
-      setStudents(response.data);
+      if (response.data) {
+        setStudents(response.data);
+      }
+
       if (response.pagination) {
         setTotal(response.pagination.total);
         setTotalPages(response.pagination.totalPages);

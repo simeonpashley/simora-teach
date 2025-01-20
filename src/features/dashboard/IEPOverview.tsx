@@ -3,7 +3,7 @@ import { Calendar, CheckCircle2, FileText } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
 
 type IEPOverviewProps = {
-  metrics: {
+  metrics?: {
     active: number;
     upcomingReviews: number;
     completedGoals: number;
@@ -11,6 +11,10 @@ type IEPOverviewProps = {
 };
 
 export function IEPOverview({ metrics }: IEPOverviewProps) {
+  if (!metrics) {
+    return null;
+  }
+
   const total = metrics.active + metrics.completedGoals;
   const completionRate = Math.round((metrics.completedGoals / total) * 100);
 
