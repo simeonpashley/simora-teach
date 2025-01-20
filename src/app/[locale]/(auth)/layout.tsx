@@ -1,43 +1,18 @@
 'use client';
 
-import { deDE, enUS, esES, frFR } from '@clerk/localizations';
+import { enUS } from '@clerk/localizations';
 import { ClerkProvider } from '@clerk/nextjs';
-import { use } from 'react';
-
-import { AppConfig } from '@/utils/AppConfig';
 
 export default function AuthLayout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const params = use(props.params);
-  let clerkLocale = enUS;
-  let signInUrl = '/sign-in';
-  let signUpUrl = '/sign-up';
-  let dashboardUrl = '/dashboard';
-  let afterSignOutUrl = '/';
+  const signInUrl = '/sign-in';
+  const signUpUrl = '/sign-up';
+  const dashboardUrl = '/dashboard';
+  const afterSignOutUrl = '/';
 
-  switch (params.locale) {
-    case 'fr':
-      clerkLocale = frFR;
-      break;
-    case 'de':
-      clerkLocale = deDE;
-      break;
-    case 'es':
-      clerkLocale = esES;
-      break;
-    // cy (Welsh) and ga (Irish) will fall back to English
-    default:
-      clerkLocale = enUS;
-  }
-
-  if (params.locale !== AppConfig.defaultLocale) {
-    signInUrl = `/${params.locale}${signInUrl}`;
-    signUpUrl = `/${params.locale}${signUpUrl}`;
-    dashboardUrl = `/${params.locale}${dashboardUrl}`;
-    afterSignOutUrl = `/${params.locale}${afterSignOutUrl}`;
-  }
+  const clerkLocale = enUS;
 
   return (
     (

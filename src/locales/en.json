@@ -203,6 +203,11 @@
     "description": "We've unfortunately encountered an error.",
     "retry": "Try Again"
   },
+  "OrganizationProfile": {
+    "title": "Settings",
+    "description": "Organisation Profile",
+    "retry": "Try Again"
+  },
   "NotFound": {
     "title": "Page not found",
     "description": "We couldn't find the page you were looking for.",
