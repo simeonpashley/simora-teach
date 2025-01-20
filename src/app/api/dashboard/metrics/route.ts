@@ -12,12 +12,11 @@ export async function GET(request: NextRequest) {
       throw ApiError.unauthorized();
     }
 
-    console.info('orgId', orgId);
-
     // Get organizationId from query params or fall back to orgId from auth
     const { searchParams } = new URL(request.url);
     const organizationId = searchParams.get('organizationId') || orgId;
 
+    console.info('organizationId', organizationId);
     const metrics = await dashboardService.getDashboardMetrics(organizationId);
     const response: ApiResponse<typeof metrics> = { data: metrics };
     return Response.json(response);

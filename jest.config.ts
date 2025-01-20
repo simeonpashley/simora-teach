@@ -14,6 +14,12 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!lucide-react|@radix-ui|class-variance-authority|tailwind-merge|clsx)/',
+  ],
+  transform: {
+    '^.+\\.(t|j)sx?$': '@swc/jest',
+  },
   testMatch: ['<rootDir>/src/**/*.test.{js,jsx,ts,tsx}'],
   collectCoverageFrom: [
     '<rootDir>/src/**/*',

@@ -3,7 +3,13 @@ import { getTranslations } from 'next-intl/server';
 import { TitleBar } from '@/features/dashboard/TitleBar';
 import { StudentList } from '@/features/students/StudentList';
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+export async function generateMetadata(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
+
+  const {
+    locale,
+  } = params;
+
   const t = await getTranslations({ locale, namespace: 'Students' });
 
   return {

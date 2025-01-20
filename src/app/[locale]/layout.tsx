@@ -37,11 +37,11 @@ export function generateStaticParams() {
 
 export default async function RootLayout(props: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   // Using internationalization in Client Components
   // TODO: Add Common/Global non-language messages for other, e.g., brand name, year, author.
-  const messages = await getMessages(props.params.locale);
+  const messages = await getMessages((await props.params).locale);
 
   // The `suppressHydrationWarning` in <html> is used to prevent hydration errors caused by `next-themes`.
   // Solution provided by the package itself: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
@@ -49,16 +49,18 @@ export default async function RootLayout(props: {
   // The `suppressHydrationWarning` attribute in <body> is used to prevent hydration errors caused by Sentry Overlay,
   // which dynamically adds a `style` attribute to the body tag.
   return (
-    <html lang={props.params.locale} suppressHydrationWarning>
-      <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
-        <NextIntlClientProvider
-          locale={props.params.locale}
-          messages={messages}
-          timeZone="UTC"
-        >
-          {props.children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    (
+      <html lang={(await props.params).locale} suppressHydrationWarning>
+        <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
+          <NextIntlClientProvider
+            locale={(await props.params).locale}
+            messages={messages}
+            timeZone="UTC"
+          >
+            {props.children}
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    )
   );
 }

@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom';
 
+import React from 'react';
+
 // Mock IntersectionObserver
 class MockIntersectionObserver {
   observe = jest.fn();
@@ -95,3 +97,45 @@ process.env.BILLING_PLAN_ENV = 'test';
 
 // // Set up environment variables for testing
 // process.env.BILLING_PLAN_ENV = 'test';
+
+// Mock Lucide React icons
+jest.mock('lucide-react', () => ({
+  AlertCircle: () => React.createElement('div', { 'data-testid': 'alert-circle' }, 'AlertCircle Icon'),
+  ChevronDown: () => React.createElement('div', { 'data-testid': 'chevron-down' }, 'ChevronDown Icon'),
+  ChevronUp: () => React.createElement('div', { 'data-testid': 'chevron-up' }, 'ChevronUp Icon'),
+  ChevronLeft: () => React.createElement('div', { 'data-testid': 'chevron-left' }, 'ChevronLeft Icon'),
+  ChevronRight: () => React.createElement('div', { 'data-testid': 'chevron-right' }, 'ChevronRight Icon'),
+  ChevronsUpDown: () => React.createElement('div', { 'data-testid': 'chevrons-up-down' }, 'ChevronsUpDown Icon'),
+  Check: () => React.createElement('div', { 'data-testid': 'check' }, 'Check Icon'),
+  X: () => React.createElement('div', { 'data-testid': 'x' }, 'X Icon'),
+  Menu: () => React.createElement('div', { 'data-testid': 'menu' }, 'Menu Icon'),
+  Search: () => React.createElement('div', { 'data-testid': 'search' }, 'Search Icon'),
+  SortAsc: () => React.createElement('div', { 'data-testid': 'sort-asc' }, 'SortAsc Icon'),
+  SortDesc: () => React.createElement('div', { 'data-testid': 'sort-desc' }, 'SortDesc Icon'),
+}));
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: jest.fn(),
+  }),
+  usePathname: () => '/test-path',
+}));
+
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) =>
+      React.createElement('div', props, children),
+    nav: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) =>
+      React.createElement('nav', props, children),
+    button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) =>
+      React.createElement('button', props, children),
+  },
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
+}));
