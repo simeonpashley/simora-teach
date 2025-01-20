@@ -5,12 +5,12 @@ const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 // CSP Directives
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.clerk.dev;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.clerk.dev https://set-cod-24.clerk.accounts.dev;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src 'self' data: https://img.clerk.com https://*.public.blob.vercel-storage.com;
   font-src 'self' https://fonts.gstatic.com;
   frame-src 'self' https://accounts.clerk.dev;
-  connect-src 'self' https://api.clerk.dev https://clerk.simora.com https://*.public.blob.vercel-storage.com;
+  connect-src 'self' https://api.clerk.dev https://clerk.simora.com https://*.public.blob.vercel-storage.com https://set-cod-24.clerk.accounts.dev;
   worker-src 'self' blob:;
   media-src 'self';
   object-src 'none';
@@ -91,7 +91,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+            value: process.env.NEXT_PUBLIC_APP_URL || 'http://127.0.0.1:3000',
           },
           {
             key: 'Access-Control-Allow-Methods',
